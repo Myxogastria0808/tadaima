@@ -17,7 +17,12 @@
   };
 
   outputs =
-    { nixpkgs, ags, astal, ... }:
+    {
+      nixpkgs,
+      ags,
+      astal,
+      ...
+    }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -26,6 +31,12 @@
     in
     {
       nixosModules.default = ./nix/module.nix;
+
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [
+          ags.packages.${system}.default
+        ];
+      };
 
       # Example greeter derivation — demonstrates how to build a greeter with tadaima.
       packages.${system}.example = pkgs.stdenv.mkDerivation {
@@ -53,3 +64,4 @@
       };
     };
 }
+

@@ -1,5 +1,8 @@
 # tadaima
 
+> **Warning**
+> This project is under active development and not yet stable. APIs may change without notice.
+
 A [greetd](https://sr.ht/~kennylevinsen/greetd/) greeter library built on
 [Astal Greet](https://aylur.github.io/astal/guide/libraries/greet) for
 [AGS](https://github.com/aylur/ags)/GJS.
