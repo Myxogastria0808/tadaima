@@ -96,6 +96,9 @@ services.tadaima = {
 3. Configure greetd (`/etc/greetd/config.toml`):
 
    ```toml
+   [terminal]
+   vt = 1
+
    [default_session]
    command = "dbus-run-session cage -s -d -- /path/to/my-greeter"
    user = "greeter"
