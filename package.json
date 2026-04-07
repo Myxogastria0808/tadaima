@@ -1,17 +1,21 @@
 {
   "name": "tadaima",
-  "version": "0.1.0",
-  "description": "A greetd greeter library built on Astal Greet for AGS/GJS",
+  "version": "0.0.1",
+  "description": "A greetd greeter library for AGS/GJS",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "src/"
+  ],
   "keywords": [
     "greetd",
     "greeter",
     "ags",
-    "astal",
     "gtk4",
     "gjs",
     "wayland",

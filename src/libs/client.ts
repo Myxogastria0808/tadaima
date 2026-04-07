@@ -106,6 +106,7 @@ export const createGreeter = (config: GreeterConfig) => {
 
       if (result.success) {
         cache.save(username, sessionName);
+        loggingIn = false;
         callbacks.onSuccess?.();
       } else {
         loggingIn = false;

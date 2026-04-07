@@ -1,10 +1,10 @@
 # nix
-.direnv/
-result/
+/.direnv
+/result
 
 # claude
 *.txt
-.claude/
+/.claude
 
 # GJS / Astal
 node_modules/

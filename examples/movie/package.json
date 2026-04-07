@@ -1,0 +1,8 @@
+{
+  "name": "tadaima-example-movie",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "tadaima": "^0.0.1"
+  }
+}

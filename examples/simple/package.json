@@ -1,0 +1,8 @@
+{
+  "name": "tadaima-example-simple",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "tadaima": "^0.0.1"
+  }
+}

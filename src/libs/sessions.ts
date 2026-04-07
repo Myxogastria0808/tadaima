@@ -25,21 +25,25 @@ export class SessionManager {
       if (!GLib.file_test(dir, GLib.FileTest.IS_DIR)) continue;
 
       const d = GLib.Dir.open(dir, 0);
-      let name: string | null;
-      while ((name = d.read_name()) !== null) {
-        if (!name.endsWith(".desktop")) continue;
-        const path = `${dir}/${name}`;
-        const kf = new GLib.KeyFile();
-        try {
-          kf.load_from_file(path, GLib.KeyFileFlags.NONE);
-          const sessionName = kf.get_string("Desktop Entry", "Name");
-          const exec = kf.get_string("Desktop Entry", "Exec");
-          if (sessionName && exec) {
-            sessions.push({ name: sessionName, exec });
+      try {
+        let name: string | null;
+        while ((name = d.read_name()) !== null) {
+          if (!name.endsWith(".desktop")) continue;
+          const path = `${dir}/${name}`;
+          const kf = new GLib.KeyFile();
+          try {
+            kf.load_from_file(path, GLib.KeyFileFlags.NONE);
+            const sessionName = kf.get_string("Desktop Entry", "Name");
+            const exec = kf.get_string("Desktop Entry", "Exec");
+            if (sessionName && exec) {
+              sessions.push({ name: sessionName, exec });
+            }
+          } catch (_) {
+            // skip invalid desktop files
           }
-        } catch (_) {
-          // skip invalid desktop files
         }
+      } finally {
+        d.close();
       }
     }
 

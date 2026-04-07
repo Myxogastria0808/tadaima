@@ -22,16 +22,16 @@ Gio._promisify(
 
 export type GreetdResponse =
   | { type: "success" }
-  | { type: "error"; error_type: string; description: string }
+  | { type: "error"; error_type: "auth_error" | "error"; description: string }
   | {
       type: "auth_message";
-      auth_message_type: string;
+      auth_message_type: "visible" | "secret" | "info" | "error";
       auth_message: string;
     };
 
 // Send a request to greetd and return the parsed response.
 // Uses async I/O for reads to avoid blocking the GTK main loop
-// during PAM authentication (which can take 2-3 seconds on failure).
+// during PAM authentication (pam_fail_delay adds a randomized delay on failure).
 const send = async (request: object): Promise<GreetdResponse> => {
   const sockPath = GLib.getenv("GREETD_SOCK");
   if (!sockPath) {
@@ -52,28 +52,41 @@ const send = async (request: object): Promise<GreetdResponse> => {
   ostream.close(null);
 
   // Read: 4-byte length + JSON response
-  const istream = conn.get_input_stream();
-  const headBytes = await istream.read_bytes_async(
+  // Use DataInputStream with HOST_ENDIAN to correctly parse the length
+  // prefix on any architecture (x86 little-endian, ARM big-endian, etc.)
+  const distream = Gio.DataInputStream.new(conn.get_input_stream());
+  distream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
+
+  const headBytes = await distream.read_bytes_async(
     4,
     GLib.PRIORITY_DEFAULT,
     null,
   );
-  const headArray = headBytes.toArray();
-  // Parse 4-byte little-endian integer (host endian on x86)
-  const responseLength =
-    headArray[0] |
-    (headArray[1] << 8) |
-    (headArray[2] << 16) |
-    (headArray[3] << 24);
+  const responseLength = Gio.DataInputStream.new(
+    Gio.MemoryInputStream.new_from_bytes(headBytes),
+  );
+  responseLength.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
+  const length = responseLength.read_int32(null);
 
-  const bodyBytes = await istream.read_bytes_async(
-    responseLength,
+  if (length <= 0) {
+    conn.close(null);
+    throw new Error(`Invalid response length from greetd: ${length}`);
+  }
+
+  const bodyBytes = await distream.read_bytes_async(
+    length,
     GLib.PRIORITY_DEFAULT,
     null,
   );
 
   conn.close(null);
-  return JSON.parse(new TextDecoder().decode(bodyBytes.toArray()));
+
+  const body = new TextDecoder().decode(bodyBytes.toArray());
+  try {
+    return JSON.parse(body);
+  } catch (_) {
+    throw new Error(`Invalid JSON response from greetd: ${body}`);
+  }
 };
 
 export const createSession = (username: string): Promise<GreetdResponse> =>
