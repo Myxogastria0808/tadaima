@@ -1,6 +1,6 @@
 # tadaima
 
-> **Warning**
+> [!WARNING]
 > This project is under active development and not yet stable. APIs may change without notice.
 
 A [greetd](https://sr.ht/~kennylevinsen/greetd/) greeter library for
