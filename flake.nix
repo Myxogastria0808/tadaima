@@ -4,8 +4,17 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    # AGS requires astal.io and astal4 at runtime for GTK4/JSX widgets.
+    # tadaima's library (src/) does NOT depend on Astal — only the
+    # example greeter binaries need it because they use AGS/Gnim JSX.
     ags = {
       url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal";
+    };
+
+    astal = {
+      url = "github:aylur/astal";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -15,6 +24,7 @@
       self,
       nixpkgs,
       ags,
+      astal,
       ...
     }:
     let
@@ -44,9 +54,12 @@
             ags.packages.${system}.default
           ];
 
+          # astal.io and astal4 are required by AGS/Gnim JSX runtime (not by tadaima)
           buildInputs = [
             pkgs.glib
             pkgs.gjs
+            astal.packages.${system}.io
+            astal.packages.${system}.astal4
           ];
 
           preBuild = ''
@@ -71,9 +84,12 @@
             ags.packages.${system}.default
           ];
 
+          # astal.io and astal4 are required by AGS/Gnim JSX runtime (not by tadaima)
           buildInputs = [
             pkgs.glib
             pkgs.gjs
+            astal.packages.${system}.io
+            astal.packages.${system}.astal4
           ];
 
           preBuild = ''
@@ -101,6 +117,9 @@
           buildInputs = [
             pkgs.glib
             pkgs.gjs
+            # astal.io and astal4 are required by AGS/Gnim JSX runtime (not by tadaima)
+            astal.packages.${system}.io
+            astal.packages.${system}.astal4
             # Additional image format support for GdkPixbuf
             pkgs.librsvg # SVG
             pkgs.webp-pixbuf-loader # WebP
@@ -127,4 +146,3 @@
       };
     };
 }
-
