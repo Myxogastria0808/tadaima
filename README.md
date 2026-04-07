@@ -221,28 +221,42 @@ tadaima/
 
 ### `createGreeter(config)`
 
-| Option        | Type       | Description                                        |
+```typescript
+const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
+  sessionDirs: ["/usr/share/wayland-sessions", "/usr/share/xsessions"],
+  cachePath: "/var/cache/tadaima/state.json",
+});
+```
+
+| Config        | Type       | Description                                        |
 | ------------- | ---------- | -------------------------------------------------- |
 | `sessionDirs` | `string[]` | Directories to search for `.desktop` session files |
 | `cachePath`   | `string`   | Path to the JSON state cache file                  |
 
-Returns an object with:
+Returns:
 
-| Method                     | Return                 | Description                                       |
-| -------------------------- | ---------------------- | ------------------------------------------------- |
-| `getSessions()`            | `Session[]`            | Discover available sessions from `.desktop` files |
-| `getCachedState()`         | `CachedState \| null`  | Load last user and session from cache             |
-| `saveState(user, session)` | `void`                 | Save user and session to cache                    |
-| `login(user, pass, exec)`  | `Promise<LoginResult>` | Authenticate and start session                    |
-| `createLoginHandler(cb)`   | `{ handle }`           | Login with concurrency guard and callbacks        |
+| Property              | Type                                           | Description                                   |
+| --------------------- | ---------------------------------------------- | --------------------------------------------- |
+| `sessions`            | `Session[]`                                    | Available sessions from `.desktop` files       |
+| `sessionNames`        | `string[]`                                     | Session display names (for dropdowns)          |
+| `cache.username`      | `string`                                       | Last authenticated username (or `""`)          |
+| `cache.sessionIndex`  | `number`                                       | Index of last session in `sessions` (or `-1`)  |
+| `createLoginHandler`  | `(callbacks) => () => Promise<void>`           | Create a login handler function                |
 
 ### `createLoginHandler(callbacks)`
 
-Wraps `login()` with concurrency guard (prevents double-submit), automatic
-state persistence, and callbacks for UI updates:
+Creates a login handler function with concurrency guard (prevents
+double-submit), session validation, automatic state persistence,
+and callbacks for UI updates.
+
+Value callbacks (`username`, `password`, `selectedSession`) are called
+at login time to read the current widget values.
 
 ```typescript
-const loginHandler = greeter.createLoginHandler({
+const handleLogin = createLoginHandler({
+  username: () => usernameEntry.text,
+  password: () => passwordEntry.text,
+  selectedSession: () => sessions[sessionDropdown.selected],
   onLoggingIn: () => {
     // Called when login starts — disable button, show spinner, etc.
   },
@@ -254,8 +268,9 @@ const loginHandler = greeter.createLoginHandler({
   },
 });
 
-// Call from button click or Enter key:
-loginHandler.handle(username, password, sessionExec, sessionName);
+// Use directly as event handler:
+<Gtk.Button onClicked={handleLogin} />
+<Gtk.PasswordEntry onActivate={handleLogin} />
 ```
 
 ### Types
@@ -264,7 +279,14 @@ loginHandler.handle(username, password, sessionExec, sessionName);
 type Session = { name: string; exec: string };
 type CachedState = { user: string; session: string };
 type LoginResult = { success: true } | { success: false; message: string };
+type GreetdResponse =
+  | { type: "success" }
+  | { type: "error"; error_type: "auth_error" | "error"; description: string }
+  | { type: "auth_message"; auth_message_type: "visible" | "secret" | "info" | "error"; auth_message: string };
 type LoginHandlerCallbacks = {
+  username: () => string;
+  password: () => string;
+  selectedSession: () => Session | undefined;
   onLoggingIn?: () => void;
   onSuccess?: () => void;
   onError: (message: string) => void;

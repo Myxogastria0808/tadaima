@@ -6,4 +6,4 @@ export type {
 } from "./libs/client";
 export type { Session } from "./libs/sessions";
 export type { CachedState } from "./libs/cache";
-
+export type { GreetdResponse } from "./libs/greetd";

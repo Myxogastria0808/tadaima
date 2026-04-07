@@ -38,6 +38,7 @@
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
+          pkgs.nodejs
           ags.packages.${system}.default
         ];
       };

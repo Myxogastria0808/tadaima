@@ -6,13 +6,10 @@ import { Gtk } from "ags/gtk4";
 import { createGreeter } from "tadaima";
 
 const Greeter = (): void => {
-  const greeter = createGreeter({
+  const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
     sessionDirs: ["/usr/share/wayland-sessions", "/usr/share/xsessions"],
     cachePath: "/var/cache/tadaima/state.json",
   });
-
-  const sessions = greeter.getSessions();
-  const cached = greeter.getCachedState();
 
   let usernameEntry!: Gtk.Entry;
   let passwordEntry!: Gtk.PasswordEntry;
@@ -20,13 +17,15 @@ const Greeter = (): void => {
   let errorLabel!: Gtk.Label;
   let loginButton!: Gtk.Button;
 
-  const loginHandler = greeter.createLoginHandler({
+  const handleLogin = createLoginHandler({
+    username: () => usernameEntry.text,
+    password: () => passwordEntry.text,
+    selectedSession: () => sessions[sessionDropdown.selected],
     onLoggingIn: () => {
       errorLabel.visible = false;
       loginButton.sensitive = false;
       loginButton.label = "Logging in...";
     },
-    onSuccess: () => {},
     onError: (message) => {
       errorLabel.label = message;
       errorLabel.visible = true;
@@ -36,25 +35,6 @@ const Greeter = (): void => {
       loginButton.label = "Login";
     },
   });
-
-  const handleLogin = () => {
-    const selectedSession = sessions[sessionDropdown.selected];
-    if (!selectedSession) {
-      errorLabel.label = "No session selected";
-      errorLabel.visible = true;
-      return;
-    }
-    loginHandler.handle(
-      usernameEntry.text,
-      passwordEntry.text,
-      selectedSession.exec,
-      selectedSession.name,
-    );
-  };
-
-  const cachedSessionIdx = cached?.session
-    ? sessions.findIndex((s) => s.name === cached.session)
-    : -1;
 
   const win = (
     <Gtk.ApplicationWindow application={app} name="greeter">
@@ -66,7 +46,7 @@ const Greeter = (): void => {
       >
         <Gtk.Label label="Login" />
         <Gtk.Entry
-          text={cached?.user ?? ""}
+          text={cache.username}
           placeholderText="Username"
           onActivate={() => passwordEntry.grab_focus()}
           $={(self) => (usernameEntry = self)}
@@ -79,9 +59,9 @@ const Greeter = (): void => {
         />
         <Gtk.DropDown
           $constructor={() =>
-            Gtk.DropDown.new_from_strings(sessions.map((s) => s.name))
+            Gtk.DropDown.new_from_strings(sessionNames)
           }
-          selected={cachedSessionIdx >= 0 ? cachedSessionIdx : 0}
+          selected={cache.sessionIndex}
           $={(self) => (sessionDropdown = self)}
         />
         <Gtk.Label label="" visible={false} $={(self) => (errorLabel = self)} />
@@ -99,4 +79,3 @@ const Greeter = (): void => {
 };
 
 export default Greeter;
-

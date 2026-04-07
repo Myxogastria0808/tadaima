@@ -13,7 +13,7 @@ const WALLPAPER_PATH =
 const Greeter = (): void => {
   app.apply_css(style);
 
-  const greeter = createGreeter({
+  const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
     sessionDirs: [
       "/run/current-system/sw/share/wayland-sessions",
       "/run/current-system/sw/share/xsessions",
@@ -21,22 +21,21 @@ const Greeter = (): void => {
     cachePath: "/var/cache/tadaima/state.json",
   });
 
-  const sessions = greeter.getSessions();
-  const cached = greeter.getCachedState();
-
   let usernameEntry!: Gtk.Entry;
   let passwordEntry!: Gtk.PasswordEntry;
   let sessionDropdown!: Gtk.DropDown;
   let errorLabel!: Gtk.Label;
   let loginButton!: Gtk.Button;
 
-  const loginHandler = greeter.createLoginHandler({
+  const handleLogin = createLoginHandler({
+    username: () => usernameEntry.text,
+    password: () => passwordEntry.text,
+    selectedSession: () => sessions[sessionDropdown.selected],
     onLoggingIn: () => {
       errorLabel.visible = false;
       loginButton.sensitive = false;
       loginButton.label = "Logging in...";
     },
-    onSuccess: () => {},
     onError: (message) => {
       errorLabel.label = message;
       errorLabel.visible = true;
@@ -46,26 +45,6 @@ const Greeter = (): void => {
       loginButton.label = "Login";
     },
   });
-
-  const handleLogin = () => {
-    const selectedSession = sessions[sessionDropdown.selected];
-    if (!selectedSession) {
-      errorLabel.label = "No session selected";
-      errorLabel.visible = true;
-      sessionDropdown.grab_focus();
-      return;
-    }
-    loginHandler.handle(
-      usernameEntry.text,
-      passwordEntry.text,
-      selectedSession.exec,
-      selectedSession.name,
-    );
-  };
-
-  const cachedSessionIdx = cached?.session
-    ? sessions.findIndex((s) => s.name === cached.session)
-    : -1;
 
   // Wallpaper uses Gtk.Picture + Gtk.Overlay because GTK4 CSS
   // background-image: url() does not work with absolute file paths
@@ -89,7 +68,7 @@ const Greeter = (): void => {
         >
           <Gtk.Label label="Welcome to NixOS" cssClasses={["greeting"]} />
           <Gtk.Entry
-            text={cached?.user ?? ""}
+            text={cache.username}
             placeholderText="Username"
             onActivate={() => passwordEntry.grab_focus()}
             $={(self) => (usernameEntry = self)}
@@ -102,9 +81,9 @@ const Greeter = (): void => {
           />
           <Gtk.DropDown
             $constructor={() =>
-              Gtk.DropDown.new_from_strings(sessions.map((s) => s.name))
+              Gtk.DropDown.new_from_strings(sessionNames)
             }
-            selected={cachedSessionIdx >= 0 ? cachedSessionIdx : 0}
+            selected={cache.sessionIndex}
             cssClasses={["session-dropdown"]}
             $={(self) => (sessionDropdown = self)}
           />
@@ -129,4 +108,3 @@ const Greeter = (): void => {
 };
 
 export default Greeter;
-

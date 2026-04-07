@@ -33,6 +33,9 @@ export type GreeterConfig = {
 };
 
 export type LoginHandlerCallbacks = {
+  username: () => string;
+  password: () => string;
+  selectedSession: () => Session | undefined;
   onLoggingIn?: () => void;
   onSuccess?: () => void;
   onError: (message: string) => void;
@@ -87,25 +90,30 @@ export const createGreeter = (config: GreeterConfig) => {
   };
 
   // Creates a login handler that wraps login() with concurrency guard,
-  // state persistence, and callbacks for success/error.
-  // This reduces boilerplate in greeter UIs without constraining widget choice.
+  // session validation, state persistence, and callbacks for UI updates.
+  // Value callbacks (username, password, selectedSession) are called at
+  // login time to read the current widget values.
+  // Returns the handler function directly.
   const createLoginHandler = (callbacks: LoginHandlerCallbacks) => {
     let loggingIn = false;
 
-    const handle = async (
-      username: string,
-      password: string,
-      exec: string,
-      sessionName: string,
-    ) => {
+    return async () => {
       if (loggingIn) return;
+
+      const session = callbacks.selectedSession();
+      if (!session) {
+        callbacks.onError("No session selected");
+        return;
+      }
+
       loggingIn = true;
       callbacks.onLoggingIn?.();
 
-      const result = await login(username, password, exec);
+      const username = callbacks.username();
+      const result = await login(username, callbacks.password(), session.exec);
 
       if (result.success) {
-        cache.save(username, sessionName);
+        cache.save(username, session.name);
         loggingIn = false;
         callbacks.onSuccess?.();
       } else {
@@ -113,16 +121,20 @@ export const createGreeter = (config: GreeterConfig) => {
         callbacks.onError(result.message);
       }
     };
-
-    return { handle };
   };
 
+  const sessions = sessionManager.getSessions();
+  const cached = cache.load();
+
   return {
-    getSessions: (): Session[] => sessionManager.getSessions(),
-    getCachedState: (): CachedState | null => cache.load(),
-    saveState: (user: string, session: string): void =>
-      cache.save(user, session),
-    login,
+    sessions,
+    sessionNames: sessions.map((s) => s.name),
+    cache: {
+      username: cached?.user ?? "",
+      sessionIndex: cached?.session
+        ? sessions.findIndex((s) => s.name === cached.session)
+        : -1,
+    },
     createLoginHandler,
   };
 };

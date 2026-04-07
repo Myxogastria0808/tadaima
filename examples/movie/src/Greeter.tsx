@@ -31,12 +31,16 @@ const findWallpaper = (): string => {
   if (!GLib.file_test(GREETER_CACHE_DIR, GLib.FileTest.IS_DIR))
     return DEFAULT_WALLPAPER;
   const dir = GLib.Dir.open(GREETER_CACHE_DIR, 0);
-  let name: string | null;
-  while ((name = dir.read_name()) !== null) {
-    if (!name.startsWith("wallpaper.")) continue;
-    const ext = name.substring(name.lastIndexOf(".")).toLowerCase();
-    if (SUPPORTED_EXTENSIONS.includes(ext))
-      return `${GREETER_CACHE_DIR}/${name}`;
+  try {
+    let name: string | null;
+    while ((name = dir.read_name()) !== null) {
+      if (!name.startsWith("wallpaper.")) continue;
+      const ext = name.substring(name.lastIndexOf(".")).toLowerCase();
+      if (SUPPORTED_EXTENSIONS.includes(ext))
+        return `${GREETER_CACHE_DIR}/${name}`;
+    }
+  } finally {
+    dir.close();
   }
   return DEFAULT_WALLPAPER;
 };
@@ -48,7 +52,7 @@ const isVideo = (path: string): boolean =>
 const Greeter = (): void => {
   app.apply_css(style);
 
-  const greeter = createGreeter({
+  const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
     sessionDirs: [
       "/run/current-system/sw/share/wayland-sessions",
       "/run/current-system/sw/share/xsessions",
@@ -56,22 +60,28 @@ const Greeter = (): void => {
     cachePath: "/var/cache/tadaima/state.json",
   });
 
-  const sessions = greeter.getSessions();
-  const cached = greeter.getCachedState();
-
   let usernameEntry!: Gtk.Entry;
   let passwordEntry!: Gtk.PasswordEntry;
   let sessionDropdown!: Gtk.DropDown;
   let errorLabel!: Gtk.Label;
   let loginButton!: Gtk.Button;
 
-  const loginHandler = greeter.createLoginHandler({
+  const handleLogin = createLoginHandler({
+    username: () => usernameEntry.text,
+    password: () => passwordEntry.text,
+    selectedSession: () => sessions[sessionDropdown.selected],
     onLoggingIn: () => {
       errorLabel.visible = false;
       loginButton.sensitive = false;
       loginButton.label = "Logging in...";
     },
-    onSuccess: () => {},
+    // TODO: remove after verifying whether onSuccess fires before greetd kills the process
+    onSuccess: () => {
+      GLib.file_set_contents(
+        "/var/cache/tadaima/onSuccess_fired.txt",
+        `onSuccess fired at ${new Date().toISOString()}\n`,
+      );
+    },
     onError: (message) => {
       errorLabel.label = message;
       errorLabel.visible = true;
@@ -81,26 +91,6 @@ const Greeter = (): void => {
       loginButton.label = "Login";
     },
   });
-
-  const handleLogin = () => {
-    const selectedSession = sessions[sessionDropdown.selected];
-    if (!selectedSession) {
-      errorLabel.label = "No session selected";
-      errorLabel.visible = true;
-      sessionDropdown.grab_focus();
-      return;
-    }
-    loginHandler.handle(
-      usernameEntry.text,
-      passwordEntry.text,
-      selectedSession.exec,
-      selectedSession.name,
-    );
-  };
-
-  const cachedSessionIdx = cached?.session
-    ? sessions.findIndex((s) => s.name === cached.session)
-    : -1;
 
   // Background wallpaper: supports both images and videos.
   // - Images use Gtk.Picture with contentFit COVER.
@@ -145,7 +135,7 @@ const Greeter = (): void => {
         >
           <Gtk.Label label="Welcome to NixOS" cssClasses={["greeting"]} />
           <Gtk.Entry
-            text={cached?.user ?? ""}
+            text={cache.username}
             placeholderText="Username"
             onActivate={() => passwordEntry.grab_focus()}
             $={(self) => (usernameEntry = self)}
@@ -158,9 +148,9 @@ const Greeter = (): void => {
           />
           <Gtk.DropDown
             $constructor={() =>
-              Gtk.DropDown.new_from_strings(sessions.map((s) => s.name))
+              Gtk.DropDown.new_from_strings(sessionNames)
             }
-            selected={cachedSessionIdx >= 0 ? cachedSessionIdx : 0}
+            selected={cache.sessionIndex}
             cssClasses={["session-dropdown"]}
             $={(self) => (sessionDropdown = self)}
           />
@@ -185,4 +175,3 @@ const Greeter = (): void => {
 };
 
 export default Greeter;
-
