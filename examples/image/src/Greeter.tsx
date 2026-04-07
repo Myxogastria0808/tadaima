@@ -5,7 +5,7 @@ import app from "ags/gtk4/app";
 import { Gtk } from "ags/gtk4";
 import Gio from "gi://Gio";
 import style from "./style.scss";
-import { createGreeter } from "../../../src/index";
+import { createGreeter } from "tadaima";
 
 const WALLPAPER_PATH =
   "/run/current-system/sw/share/backgrounds/nixos/nix-wallpaper-nineish-solarized-dark.png";

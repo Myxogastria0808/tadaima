@@ -6,7 +6,7 @@ import { Gtk } from "ags/gtk4";
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 import style from "./style.scss";
-import { createGreeter } from "../../../src/index";
+import { createGreeter } from "tadaima";
 
 // Wallpaper configuration.
 // The file is expected to be copied (not symlinked) to the cache directory

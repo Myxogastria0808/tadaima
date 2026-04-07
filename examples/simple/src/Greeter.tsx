@@ -3,7 +3,7 @@
 
 import app from "ags/gtk4/app";
 import { Gtk } from "ags/gtk4";
-import { createGreeter } from "../../../src/index";
+import { createGreeter } from "tadaima";
 
 const Greeter = (): void => {
   const greeter = createGreeter({
