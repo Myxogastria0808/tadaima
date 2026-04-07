@@ -89,3 +89,4 @@ export const startSession = (
 
 export const cancelSession = (): Promise<GreetdResponse> =>
   send({ type: "cancel_session" });
+

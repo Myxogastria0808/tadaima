@@ -125,3 +125,4 @@ export const createGreeter = (config: GreeterConfig) => {
     createLoginHandler,
   };
 };
+
