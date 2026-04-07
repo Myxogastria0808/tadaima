@@ -11,32 +11,210 @@ greetd authentication, session discovery, and state caching — you bring
 the UI.
 
 tadaima communicates with greetd directly via Unix socket
-([greetd-ipc(7)](https://man.archlinux.org/man/greetd-ipc.7.en)) —
+( [greetd-ipc(7)](https://man.archlinux.org/man/greetd-ipc.7.en) ) —
 no Astal Greet dependency required.
 
-## Quick Start
+## Examples usage
 
-```typescript
-import { createGreeter } from "tadaima";
+### NixOS
 
-const greeter = createGreeter({
-  sessionDirs: ["/usr/share/wayland-sessions", "/usr/share/xsessions"],
-  cachePath: "/var/cache/tadaima/state.json",
-});
+Add tadaima to your flake inputs:
 
-// Discover available sessions
-const sessions = greeter.getSessions();
+```nix
+inputs.tadaima = {
+  url = "github:Myxogastria0808/tadaima";
+  inputs.nixpkgs.follows = "nixpkgs";
+  inputs.ags.follows = "ags";
+  inputs.astal.follows = "astal";
+};
+```
 
-// Restore last user/session from cache
-const cached = greeter.getCachedState();
+#### Use a pre-built example greeter
 
-// Authenticate — returns { success: true } or { success: false, message }
-const result = await greeter.login(username, password, sessions[0].exec);
-if (result.success) {
-  greeter.saveState(username, sessions[0].name);
-} else {
-  console.error(result.message);
-}
+```nix
+imports = [ inputs.tadaima.nixosModules.default ];
+
+services.tadaima = {
+  enable = true;
+  package = inputs.tadaima.packages.${system}.movie;  # or .simple, .image
+};
+```
+
+| Package  | Description                                                   |
+| -------- | ------------------------------------------------------------- |
+| `simple` | Bare-minimum login form, no wallpaper, no styling             |
+| `image`  | Static image wallpaper with Catppuccin Mocha theme            |
+| `movie`  | Video/image wallpaper with GStreamer + Catppuccin Mocha theme |
+
+#### Build your own greeter
+
+```nix
+myGreeter = pkgs.stdenv.mkDerivation {
+  name = "my-greeter";
+  src = ./greeter;
+
+  nativeBuildInputs = with pkgs; [
+    wrapGAppsHook3
+    gobject-introspection
+    inputs.ags.packages.${system}.default
+  ];
+
+  buildInputs = [
+    pkgs.glib
+    pkgs.gjs
+    inputs.astal.packages.${system}.io
+    inputs.astal.packages.${system}.astal4
+  ];
+
+  preBuild = ''
+    mkdir -p node_modules
+    ln -s ${inputs.tadaima}/src node_modules/tadaima
+  '';
+
+  installPhase = ''
+    mkdir -p $out/bin
+    ags bundle app.tsx $out/bin/greeter
+  '';
+};
+
+imports = [ inputs.tadaima.nixosModules.default ];
+services.tadaima = {
+  enable = true;
+  package = myGreeter;
+};
+```
+
+### Nix (non-NixOS)
+
+If you have Nix installed on another distro (e.g. Arch Linux), you can
+build a greeter with `nix build`:
+
+```sh
+# Build an example greeter
+nix build github:Myxogastria0808/tadaima#movie
+
+# The binary is at ./result/bin/greeter
+```
+
+greetd and cage must be installed via your distro's package manager.
+Configure greetd manually:
+
+```toml
+# /etc/greetd/config.toml
+[terminal]
+vt = 1
+
+[default_session]
+command = "dbus-run-session cage -s -d -- /path/to/result/bin/greeter"
+user = "greeter"
+```
+
+```sh
+sudo mkdir -p /var/cache/tadaima
+sudo chown greeter:greeter /var/cache/tadaima
+sudo systemctl enable greetd
+```
+
+### Arch-based distributions
+
+1. Install dependencies:
+
+   ```sh
+   pacman -S greetd cage
+   yay -S aylurs-gtk-shell
+   ```
+
+2. Build from an example:
+
+   ```sh
+   git clone https://github.com/Myxogastria0808/tadaima.git
+   cd tadaima/examples/movie   # or simple, image
+   npm install
+   ags bundle app.tsx ./my-greeter
+   ```
+
+   Or build your own greeter:
+
+   ```sh
+   mkdir my-greeter && cd my-greeter
+   npm init -y
+   npm install tadaima
+   ags types --update --directory .
+   # Write app.tsx and src/Greeter.tsx (see examples/ for reference)
+   ags bundle app.tsx ./my-greeter
+   ```
+
+3. Configure greetd:
+
+   ```toml
+   # /etc/greetd/config.toml
+   [terminal]
+   vt = 1
+
+   [default_session]
+   command = "dbus-run-session cage -s -d -- /path/to/my-greeter"
+   user = "greeter"
+   ```
+
+4. Create cache directory and enable greetd:
+
+   ```sh
+   sudo mkdir -p /var/cache/tadaima
+   sudo chown greeter:greeter /var/cache/tadaima
+   sudo systemctl enable greetd
+   ```
+
+## How to create a custom greeter
+
+### Prerequisites
+
+- [AGS](https://github.com/aylur/ags) / [GJS](https://gjs.guide/)
+- [Nix](https://nixos.org/) (for building examples)
+
+### Setup
+
+```sh
+git clone https://github.com/Myxogastria0808/tadaima.git
+cd tadaima
+direnv allow   # or: nix develop
+```
+
+### Generate type definitions
+
+```sh
+ags types --update --directory src/
+ags types --update --directory examples/simple/
+ags types --update --directory examples/image/
+ags types --update --directory examples/movie/
+```
+
+### Build examples
+
+```sh
+nix build .#simple
+nix build .#image
+nix build .#movie
+```
+
+### Project structure
+
+```
+tadaima/
+├── src/                     # Library source (npm package)
+│   ├── index.ts             # Public API exports
+│   └── libs/
+│       ├── client.ts        # createGreeter() + createLoginHandler()
+│       ├── greetd.ts        # greetd Unix socket IPC (greetd-ipc protocol)
+│       ├── cache.ts         # CacheManager — JSON state persistence
+│       └── sessions.ts      # SessionManager — .desktop file discovery
+├── examples/
+│   ├── simple/              # Bare-minimum greeter
+│   ├── image/               # Static image wallpaper + Catppuccin Mocha
+│   └── movie/               # Video/image wallpaper + GStreamer
+├── nix/
+│   └── module.nix           # NixOS module (services.tadaima)
+├── flake.nix                # Nix flake
+└── package.json             # npm package definition
 ```
 
 ## API
@@ -93,226 +271,17 @@ type LoginHandlerCallbacks = {
 };
 ```
 
-## Getting Started
-
-### Build from an example
-
-```sh
-git clone https://github.com/Myxogastria0808/tadaima.git
-cd tadaima/examples/movie   # or simple, image
-npm install
-ags bundle app.tsx ./my-greeter
-```
-
-### Build your own greeter
-
-```sh
-mkdir my-greeter && cd my-greeter
-npm init -y
-npm install tadaima
-ags types --update --directory .
-```
-
-Write `app.tsx` and `src/Greeter.tsx` (see [examples/](./examples/) for reference), then build:
-
-```sh
-ags bundle app.tsx ./my-greeter
-```
-
-## Installation
-
-### NixOS (flake)
-
-Add tadaima to your flake inputs:
-
-```nix
-# flake.nix
-inputs.tadaima = {
-  url = "github:Myxogastria0808/tadaima";
-  inputs.nixpkgs.follows = "nixpkgs";
-  inputs.ags.follows = "ags";
-  inputs.astal.follows = "astal";
-};
-```
-
-#### Option A: Use a pre-built example greeter
-
-tadaima provides ready-to-use greeter packages:
-
-```nix
-imports = [ inputs.tadaima.nixosModules.default ];
-
-services.tadaima = {
-  enable = true;
-  package = inputs.tadaima.packages.${system}.movie;  # or .simple, .image
-};
-```
-
-| Package  | Description                                                   |
-| -------- | ------------------------------------------------------------- |
-| `simple` | Bare-minimum login form, no wallpaper, no styling             |
-| `image`  | Static image wallpaper with Catppuccin Mocha theme            |
-| `movie`  | Video/image wallpaper with GStreamer + Catppuccin Mocha theme |
-
-#### Option B: Build your own greeter
-
-Write your own TSX greeter using tadaima as a library:
-
-```nix
-# your greeter derivation
-myGreeter = pkgs.stdenv.mkDerivation {
-  name = "my-greeter";
-  src = ./greeter;  # your greeter source
-
-  nativeBuildInputs = with pkgs; [
-    wrapGAppsHook3
-    gobject-introspection
-    inputs.ags.packages.${system}.default
-  ];
-
-  buildInputs = [
-    pkgs.glib
-    pkgs.gjs
-    inputs.astal.packages.${system}.io
-    inputs.astal.packages.${system}.astal4
-    # Add GStreamer plugins if you want video wallpaper support
-  ];
-
-  # Link tadaima into node_modules so esbuild resolves `import "tadaima"`
-  preBuild = ''
-    mkdir -p node_modules
-    ln -s ${inputs.tadaima}/src node_modules/tadaima
-  '';
-
-  installPhase = ''
-    mkdir -p $out/bin
-    ags bundle app.tsx $out/bin/greeter
-  '';
-};
-
-# Use the NixOS module
-imports = [ inputs.tadaima.nixosModules.default ];
-services.tadaima = {
-  enable = true;
-  package = myGreeter;
-};
-```
-
-### Other distributions
-
-1. Install dependencies:
-
-   ```sh
-   # Example for Arch Linux:
-   pacman -S greetd cage
-   yay -S aylurs-gtk-shell
-   ```
-
-2. Install tadaima and write your greeter:
-
-   ```sh
-   mkdir my-greeter && cd my-greeter
-   npm init -y
-   npm install tadaima
-   ```
-
-3. Write your greeter TSX (see [examples/](./examples/) for reference),
-   then build:
-
-   ```sh
-   ags bundle app.tsx ./my-greeter
-   ```
-
-4. Configure greetd (`/etc/greetd/config.toml`):
-
-   ```toml
-   [terminal]
-   vt = 1
-
-   [default_session]
-   command = "dbus-run-session cage -s -d -- /path/to/my-greeter"
-   user = "greeter"
-   ```
-
-5. Create cache directory:
-
-   ```sh
-   sudo mkdir -p /var/cache/tadaima
-   sudo chown greeter:greeter /var/cache/tadaima
-   ```
-
-6. Enable and start greetd:
-
-   ```sh
-   sudo systemctl enable greetd
-   sudo systemctl start greetd
-   ```
-
-## Development
-
-### Prerequisites
-
-- [AGS](https://github.com/aylur/ags) / [GJS](https://gjs.guide/)
-- [Nix](https://nixos.org/) (for building examples and development shell)
-
-### Setup
-
-```sh
-git clone https://github.com/Myxogastria0808/tadaima.git
-cd tadaima
-direnv allow   # or: nix develop
-```
-
-### Generate type definitions
-
-```sh
-ags types --update --directory src/
-ags types --update --directory examples/simple/
-ags types --update --directory examples/image/
-ags types --update --directory examples/movie/
-```
-
-### Build examples
-
-```sh
-nix build .#simple
-nix build .#image
-nix build .#movie
-```
-
-### Project structure
-
-```
-tadaima/
-├── src/                     # Library source (no Astal dependency)
-│   ├── index.ts             # Public API exports
-│   └── libs/
-│       ├── client.ts        # createGreeter() + createLoginHandler()
-│       ├── greetd.ts        # greetd Unix socket IPC (greetd-ipc protocol)
-│       ├── cache.ts         # CacheManager — JSON state persistence
-│       └── sessions.ts      # SessionManager — .desktop file discovery
-├── examples/                # Reference implementations
-│   ├── simple/              # Bare-minimum greeter
-│   ├── image/               # Static image wallpaper + Catppuccin Mocha
-│   └── movie/               # Video/image wallpaper + GStreamer
-├── nix/
-│   └── module.nix           # NixOS module (services.tadaima)
-├── flake.nix                # Nix flake
-├── README.md
-└── LICENSE
-```
-
 ## Session directories
 
-| Distro | Wayland                                          | X11                                       |
-| ------ | ------------------------------------------------ | ----------------------------------------- |
-| NixOS  | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
-| Others | `/usr/share/wayland-sessions/`                   | `/usr/share/xsessions/`                   |
+| Distro     | Wayland                                          | X11                                       |
+| ---------- | ------------------------------------------------ | ----------------------------------------- |
+| NixOS      | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
+| Arch-based | `/usr/share/wayland-sessions/`                   | `/usr/share/xsessions/`                   |
 
 ## Architecture
 
 The greeter runs inside [cage](https://github.com/cage-kiosk/cage),
-a minimal Wayland kiosk compositor:
+a Wayland kiosk compositor:
 
 ```
 greetd → dbus-run-session → cage → greeter binary
@@ -322,7 +291,8 @@ greetd → dbus-run-session → cage → greeter binary
   `<window>` (which depends on `gtk4-layer-shell`) cannot be used.
   The greeter uses `Gtk.ApplicationWindow` instead, which cage
   automatically fullscreens.
-- **dbus-run-session** provides a D-Bus session bus required by GTK4.
+- **dbus-run-session** provides a D-Bus session bus for the greeter process.
+  This follows the [regreet NixOS module](https://github.com/NixOS/nixpkgs/blob/release-25.11/nixos/modules/programs/regreet.nix) pattern.
 - **greetd** manages authentication via PAM and session lifecycle.
 
 tadaima communicates with greetd via the
@@ -343,5 +313,5 @@ tadaima communicates with greetd via the
 
 ## License
 
-GPL-3.0
+[GPL-3.0](https://github.com/Myxogastria0808/tadaima?tab=GPL-3.0-1-ov-file)
 
