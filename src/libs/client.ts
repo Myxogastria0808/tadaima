@@ -1,37 +1,27 @@
-// greetd authentication client using the Astal Greet low-level API.
+// greetd authentication client.
 //
-// The high-level Greet.login() is NOT used because it ignores Response
-// objects from send() — it never checks for Greet.Error responses, so
-// auth failures are silently swallowed (bug in Astal Greet Vala source).
-//
-// This module uses the low-level API (CreateSession → PostAuthMesssage →
-// StartSession) with Gio._promisify to enable async/await, and inspects
-// each Response via instanceof to detect auth failures.
+// Communicates with greetd directly via Unix socket using the greetd-ipc(7)
+// protocol. No external dependencies (Astal Greet is NOT used).
 //
 // greetd expects greeters to handle auth retries internally — the greeter
 // must not exit on failure. This client returns a result object instead of
 // throwing, so the UI can display errors and let the user retry.
 //
 // References:
-// - Astal Greet source: https://github.com/aylur/astal/tree/main/lib/greet/src
-// - Astal Greet API: https://aylur.github.io/libastal/greet/index.html
-// - GJS async/await: https://gjs.guide/guides/gjs/asynchronous-programming.html
+// - greetd IPC protocol: https://man.archlinux.org/man/greetd-ipc.7.en
 // - greetd retry design: https://github.com/apognu/tuigreet/issues/24
 
-import Greet from "gi://AstalGreet";
 import GLib from "gi://GLib";
-import Gio from "gi://Gio";
+import {
+  createSession,
+  postAuthResponse,
+  startSession,
+  cancelSession,
+} from "./greetd";
 import { CacheManager } from "./cache";
 import type { CachedState } from "./cache";
 import { SessionManager } from "./sessions";
 import type { Session } from "./sessions";
-
-// Enable async/await for Request.send() by promisifying the async/finish pair.
-// Without this, send() requires a callback argument and cannot return a Promise.
-// GJS does not auto-promisify GIO async methods — _promisify must be called
-// explicitly. The type definitions show a no-arg Promise overload, but it
-// only works after this call.
-Gio._promisify(Greet.Request.prototype, "send", "send_finish");
 
 export type LoginResult =
   | { success: true }
@@ -40,6 +30,12 @@ export type LoginResult =
 export type GreeterConfig = {
   sessionDirs: string[];
   cachePath: string;
+};
+
+export type LoginHandlerCallbacks = {
+  onLoggingIn?: () => void;
+  onSuccess?: () => void;
+  onError: (message: string) => void;
 };
 
 export const createGreeter = (config: GreeterConfig) => {
@@ -53,9 +49,8 @@ export const createGreeter = (config: GreeterConfig) => {
   ): Promise<LoginResult> => {
     try {
       // Step 1: Create session for the given username
-      // GJS requires property objects for GObject constructors (not positional args)
-      const createRes = await new Greet.CreateSession({ username }).send();
-      if (createRes instanceof Greet.Error) {
+      const createRes = await createSession(username);
+      if (createRes.type === "error") {
         return {
           success: false,
           message: createRes.description ?? "Failed to create session",
@@ -63,12 +58,9 @@ export const createGreeter = (config: GreeterConfig) => {
       }
 
       // Step 2: Post password
-      // Note: "PostAuthMesssage" has a typo (three s's) — this is in the Astal source
-      const authRes = await new Greet.PostAuthMesssage({
-        response: password,
-      }).send();
-      if (authRes instanceof Greet.Error) {
-        await new Greet.CancelSession().send();
+      const authRes = await postAuthResponse(password);
+      if (authRes.type === "error") {
+        await cancelSession();
         return {
           success: false,
           message: authRes.description ?? "Authentication failed",
@@ -80,8 +72,8 @@ export const createGreeter = (config: GreeterConfig) => {
       if (!argv) {
         return { success: false, message: "Failed to parse session command" };
       }
-      const startRes = await new Greet.StartSession({ cmd: argv }).send();
-      if (startRes instanceof Greet.Error) {
+      const startRes = await startSession(argv);
+      if (startRes.type === "error") {
         return {
           success: false,
           message: startRes.description ?? "Failed to start session",
@@ -94,12 +86,42 @@ export const createGreeter = (config: GreeterConfig) => {
     }
   };
 
+  // Creates a login handler that wraps login() with concurrency guard,
+  // state persistence, and callbacks for success/error.
+  // This reduces boilerplate in greeter UIs without constraining widget choice.
+  const createLoginHandler = (callbacks: LoginHandlerCallbacks) => {
+    let loggingIn = false;
+
+    const handle = async (
+      username: string,
+      password: string,
+      exec: string,
+      sessionName: string,
+    ) => {
+      if (loggingIn) return;
+      loggingIn = true;
+      callbacks.onLoggingIn?.();
+
+      const result = await login(username, password, exec);
+
+      if (result.success) {
+        cache.save(username, sessionName);
+        callbacks.onSuccess?.();
+      } else {
+        loggingIn = false;
+        callbacks.onError(result.message);
+      }
+    };
+
+    return { handle };
+  };
+
   return {
     getSessions: (): Session[] => sessionManager.getSessions(),
     getCachedState: (): CachedState | null => cache.load(),
     saveState: (user: string, session: string): void =>
       cache.save(user, session),
     login,
+    createLoginHandler,
   };
 };
-

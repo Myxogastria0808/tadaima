@@ -5,3 +5,7 @@
 *.txt
 .claude/
 
+# GJS / Astal
+node_modules/
+@girs/
+
