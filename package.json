@@ -23,8 +23,7 @@
     "browser-sync": "catalog:typedoc",
     "@astrojs/starlight": "catalog:wiki",
     "astro": "catalog:wiki",
-    "sharp": "catalog:wiki",
-    "wrangler": "catalog:wiki"
+    "sharp": "catalog:wiki"
   }
 }
 
