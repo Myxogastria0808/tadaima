@@ -24,7 +24,7 @@ jobs:
       # Build
       - name: Build
         id: build
-        run: nix develop --command bash -c "pnpm i && pnpm run build"
+        run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
       # Deploy Preview to Cloudflare Workers
       # Ref: https://zenn.dev/lalalatotoro/articles/b8fa632b53d332
       # Ref: https://zenn.dev/nikomaru/articles/0cea1b1e2fd4f2

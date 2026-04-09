@@ -21,7 +21,7 @@ jobs:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       # Build
       - name: Build
-        run: nix develop --command bash -c "pnpm i && pnpm run build"
+        run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
       # Deploy Production to Cloudflare Workers
       - name: Deploy Production to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
