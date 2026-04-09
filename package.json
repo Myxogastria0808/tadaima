@@ -2,7 +2,7 @@
   "name": "tadaima-workspace",
   "private": true,
   "scripts": {
-    "setup": "pnpm install && sh scripts/types.sh",
+    "setup": "pnpm install && sh scripts/types.sh && pnpm run wiki:build",
     "types": "sh scripts/types.sh",
     "package:pub": "pnpm -C package pub",
     "package:unpub": "pnpm -C package unpub",
