@@ -6,8 +6,8 @@
     "types": "sh scripts/types.sh",
     "package:pub": "pnpm -C package pub",
     "package:unpub": "pnpm -C package unpub",
-    "typedoc:build": "pnpm -C package typedoc",
-    "typedoc:preview": "browser-sync start --server docs/api --no-open",
+    "typedoc:build": "pnpm -C package typedoc:build",
+    "typedoc:preview": "pnpm -C package typedoc:preview",
     "wiki:dev": "pnpm -C docs/wiki dev",
     "wiki:start": "pnpm -C docs/wiki start",
     "wiki:build": "pnpm -C docs/wiki build",
@@ -17,13 +17,6 @@
     "nix:build:image": "sh scripts/build.sh image",
     "nix:build:movie": "sh scripts/build.sh movie"
   },
-  "packageManager": "pnpm@10.18.0",
-  "devDependencies": {
-    "typedoc": "catalog:typedoc",
-    "browser-sync": "catalog:typedoc",
-    "@astrojs/starlight": "catalog:wiki",
-    "astro": "catalog:wiki",
-    "sharp": "catalog:wiki"
-  }
+  "packageManager": "pnpm@10.18.0"
 }
 

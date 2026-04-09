@@ -24,7 +24,8 @@
   "scripts": {
     "pub": "pnpm publish --access=public",
     "unpub": "pnpm unpublish tadaima@${npm_config_v}",
-    "typedoc": "typedoc"
+    "typedoc:build": "typedoc",
+    "typedoc:preview": "browser-sync start --server ../docs/api --no-open"
   },
   "license": "GPL-3.0",
   "repository": {
@@ -32,7 +33,8 @@
     "url": "https://github.com/Myxogastria0808/tadaima"
   },
   "devDependencies": {
-    "typedoc": "catalog:typedoc"
+    "typedoc": "catalog:typedoc",
+    "browser-sync": "catalog:typedoc"
   }
 }
 
