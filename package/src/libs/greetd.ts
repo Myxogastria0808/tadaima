@@ -56,44 +56,63 @@ const send = async (request: object): Promise<GreetdResponse> => {
   const conn = client.connect(addr, null);
 
   try {
-    // Write: 4-byte length (host endian) + JSON payload
-    const payload = JSON.stringify(request);
+    // Write: 4-byte length (host endian) + JSON payload as raw bytes.
+    // greetd-ipc(7) length prefix is in bytes, not UTF-16 code units.
+    // TextEncoder produces UTF-8 bytes without a trailing NUL.
+    const payloadBytes = new TextEncoder().encode(JSON.stringify(request));
     const ostream = Gio.DataOutputStream.new(conn.get_output_stream());
     ostream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
-    ostream.put_int32(payload.length, null);
-    ostream.put_string(payload, null);
+    ostream.put_int32(payloadBytes.length, null);
+    ostream.write_bytes(GLib.Bytes.new(payloadBytes), null);
     ostream.close(null);
 
     // Read: 4-byte length + JSON response
     // Use DataInputStream with HOST_ENDIAN to correctly parse the length
     // prefix on any architecture (x86 little-endian, ARM big-endian, etc.)
-    const distream = Gio.DataInputStream.new(conn.get_input_stream());
-    distream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
+    //
+    // readAllBytes helper ensures we read exactly `count` bytes, since
+    // read_bytes_async is not guaranteed to return the full requested amount.
+    const istream = conn.get_input_stream();
+    const readAllBytes = async (count: number): Promise<Uint8Array> => {
+      const chunks: Uint8Array[] = [];
+      let remaining = count;
+      while (remaining > 0) {
+        const bytes = await istream.read_bytes_async(
+          remaining,
+          GLib.PRIORITY_DEFAULT,
+          null,
+        );
+        const chunk = bytes.toArray();
+        if (chunk.length === 0) {
+          throw new Error("Unexpected end of stream from greetd");
+        }
+        chunks.push(chunk);
+        remaining -= chunk.length;
+      }
+      const result = new Uint8Array(count);
+      let offset = 0;
+      for (const chunk of chunks) {
+        result.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return result;
+    };
 
-    const headBytes = await distream.read_bytes_async(
-      4,
-      GLib.PRIORITY_DEFAULT,
-      null,
+    const headBytes = await readAllBytes(4);
+    const distream = Gio.DataInputStream.new(
+      Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(headBytes)),
     );
-    const lengthStream = Gio.DataInputStream.new(
-      Gio.MemoryInputStream.new_from_bytes(headBytes),
-    );
-    lengthStream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
-    const length = lengthStream.read_int32(null);
-    lengthStream.close(null);
+    distream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
+    const length = distream.read_int32(null);
+    distream.close(null);
 
     if (length <= 0) {
       throw new Error(`Invalid response length from greetd: ${length}`);
     }
 
-    const bodyBytes = await distream.read_bytes_async(
-      length,
-      GLib.PRIORITY_DEFAULT,
-      null,
-    );
-    distream.close(null);
+    const bodyBytes = await readAllBytes(length);
 
-    const body = new TextDecoder().decode(bodyBytes.toArray());
+    const body = new TextDecoder().decode(bodyBytes);
     try {
       return JSON.parse(body);
     } catch (_) {

@@ -1,5 +1,6 @@
 {
   "name": "tadaima",
+  "private": true,
   "scripts": {
     "setup": "pnpm install && sh scripts/types.sh",
     "types": "sh scripts/types.sh",
