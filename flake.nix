@@ -66,7 +66,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/packages/tadaima/src node_modules/tadaima
+            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
           '';
 
           installPhase = ''
@@ -96,7 +96,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/packages/tadaima/src node_modules/tadaima
+            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
           '';
 
           installPhase = ''
@@ -137,7 +137,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/packages/tadaima/src node_modules/tadaima
+            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
           '';
 
           installPhase = ''
