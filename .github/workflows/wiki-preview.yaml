@@ -24,24 +24,22 @@ jobs:
       # Build
       - name: Build
         id: build
-        run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
+        run: nix develop --command bash -c "pnpm i && pnpm run build"
       # Deploy Preview to Cloudflare Workers
       # Ref: https://zenn.dev/lalalatotoro/articles/b8fa632b53d332
       # Ref: https://zenn.dev/nikomaru/articles/0cea1b1e2fd4f2
       # Ref: https://developers.cloudflare.com/workers/wrangler/commands/#versions-upload
-      # Note: uses npm (not pnpm) to install wrangler because pnpm's store
-      # conflicts between nix develop and pnpm/action-setup.
       - name: Deploy Preview to Cloudflare Workers
         id: preview
         continue-on-error: true
         uses: cloudflare/wrangler-action@v3
         with:
-          packageManager: npm
+          wranglerVersion: "4.45.3"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: "docs/wiki"
           command: |
             versions upload --message "Deployed a Preview by GitHub Actions: branch ${{ github.ref_name }}"
-          workingDirectory: "docs/wiki"
       - name: Create Preview Summary File (Success Pattern)
         id: create-success-summary
         env:

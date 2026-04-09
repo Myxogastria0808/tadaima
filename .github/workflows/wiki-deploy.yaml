@@ -21,14 +21,12 @@ jobs:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       # Build
       - name: Build
-        run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
-      # Deploy Wiki to Cloudflare Workers
-      # Note: uses npm (not pnpm) to install wrangler because pnpm's store
-      # conflicts between nix develop and pnpm/action-setup.
-      - name: Deploy Wiki to Cloudflare Workers
+        run: nix develop --command bash -c "pnpm i && pnpm run build"
+      # Deploy Production to Cloudflare Workers
+      - name: Deploy Production to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
-          packageManager: npm
+          wranglerVersion: "4.38.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: "docs/wiki"
