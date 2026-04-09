@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # AGS requires astal.io and astal4 at runtime for GTK4/JSX widgets.
-    # tadaima's library (src/) does NOT depend on Astal — only the
+    # tadaima's library (package/src/) does NOT depend on Astal — only the
     # example greeter binaries need it because they use AGS/Gnim JSX.
     ags = {
       url = "github:aylur/ags";
@@ -39,6 +39,7 @@
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           pkgs.nodejs
+          pkgs.corepack
           ags.packages.${system}.default
         ];
       };
@@ -65,7 +66,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/src node_modules/tadaima
+            ln -s ${self}/package/src node_modules/tadaima
           '';
 
           installPhase = ''
@@ -95,7 +96,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/src node_modules/tadaima
+            ln -s ${self}/package/src node_modules/tadaima
           '';
 
           installPhase = ''
@@ -136,7 +137,7 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -s ${self}/src node_modules/tadaima
+            ln -s ${self}/package/src node_modules/tadaima
           '';
 
           installPhase = ''

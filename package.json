@@ -1,30 +1,22 @@
 {
-  "name": "tadaima",
-  "version": "0.0.1",
-  "description": "A greetd greeter library for AGS/GJS",
-  "type": "module",
-  "main": "src/index.ts",
-  "exports": {
-    ".": "./src/index.ts"
+  "name": "tadaima-workspace",
+  "private": true,
+  "scripts": {
+    "setup": "pnpm install && sh scripts/types.sh && pnpm run wiki:build",
+    "types": "sh scripts/types.sh",
+    "package:pub": "pnpm -C package pub",
+    "package:unpub": "pnpm -C package unpub",
+    "typedoc:build": "pnpm -C package typedoc:build",
+    "typedoc:preview": "pnpm -C package typedoc:preview",
+    "wiki:dev": "pnpm -C docs/wiki dev",
+    "wiki:start": "pnpm -C docs/wiki start",
+    "wiki:build": "pnpm -C docs/wiki build",
+    "wiki:preview": "pnpm -C docs/wiki preview",
+    "wiki:astro": "pnpm -C docs/wiki astro",
+    "nix:build:simple": "sh scripts/build.sh simple",
+    "nix:build:image": "sh scripts/build.sh image",
+    "nix:build:movie": "sh scripts/build.sh movie"
   },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "src/"
-  ],
-  "keywords": [
-    "greetd",
-    "greeter",
-    "ags",
-    "gtk4",
-    "gjs",
-    "wayland",
-    "login"
-  ],
-  "license": "GPL-3.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Myxogastria0808/tadaima"
-  }
+  "packageManager": "pnpm@10.18.0"
 }
 

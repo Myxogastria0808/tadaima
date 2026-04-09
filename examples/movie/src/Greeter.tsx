@@ -75,13 +75,6 @@ const Greeter = (): void => {
       loginButton.sensitive = false;
       loginButton.label = "Logging in...";
     },
-    // TODO: remove after verifying whether onSuccess fires before greetd kills the process
-    onSuccess: () => {
-      GLib.file_set_contents(
-        "/var/cache/tadaima/onSuccess_fired.txt",
-        `onSuccess fired at ${new Date().toISOString()}\n`,
-      );
-    },
     onError: (message) => {
       errorLabel.label = message;
       errorLabel.visible = true;
@@ -147,9 +140,7 @@ const Greeter = (): void => {
             $={(self) => (passwordEntry = self)}
           />
           <Gtk.DropDown
-            $constructor={() =>
-              Gtk.DropDown.new_from_strings(sessionNames)
-            }
+            $constructor={() => Gtk.DropDown.new_from_strings(sessionNames)}
             selected={cache.sessionIndex}
             cssClasses={["session-dropdown"]}
             $={(self) => (sessionDropdown = self)}
@@ -175,3 +166,4 @@ const Greeter = (): void => {
 };
 
 export default Greeter;
+

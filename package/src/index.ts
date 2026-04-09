@@ -1,3 +1,12 @@
+/**
+ * tadaima — a greetd greeter library for AGS/GJS.
+ *
+ * Provides greetd authentication, session discovery, and state caching
+ * via direct Unix socket communication (greetd-ipc protocol).
+ *
+ * @packageDocumentation
+ */
+
 export { createGreeter } from "./libs/client";
 export type {
   GreeterConfig,
@@ -7,3 +16,4 @@ export type {
 export type { Session } from "./libs/sessions";
 export type { CachedState } from "./libs/cache";
 export type { GreetdResponse } from "./libs/greetd";
+
