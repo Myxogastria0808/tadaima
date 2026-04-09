@@ -1,12 +1,32 @@
-# nix
+# Nix
 /.direnv
 /result
 
-# claude
+# Claude
 *.txt
 /.claude
 
-# GJS / Astal
+# JavaScript / GJS
 node_modules/
 @girs/
+
+# Astro
+.astro/
+dist/
+
+# Typedoc
+docs/api/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment Variables
+.env
+.env.production
+
+# MacOS-specific Files
+.DS_Store
 

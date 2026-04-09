@@ -1,0 +1,15 @@
+packages:
+  - "package"
+  - "examples/*"
+  - "docs/wiki"
+
+catalogs:
+  typedoc:
+    typedoc: ^0.28.18
+    browser-sync: ^3.0.4
+  wiki:
+    "@astrojs/starlight": ^0.38.3
+    astro: ^6.0.1
+    sharp: ^0.34.2
+    wrangler: ^4.33.1
+

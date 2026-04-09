@@ -1,23 +1,44 @@
-// Discovers available desktop sessions from .desktop files.
-//
-// Reads session entries from XDG session directories. The default paths are:
-// - NixOS: /run/current-system/sw/share/wayland-sessions/, .../xsessions/
-// - Arch/other: /usr/share/wayland-sessions/, /usr/share/xsessions/
+/**
+ * Desktop session discovery from `.desktop` files.
+ *
+ * Reads session entries from XDG session directories:
+ * - NixOS: `/run/current-system/sw/share/wayland-sessions/`, `.../xsessions/`
+ * - Arch-based: `/usr/share/wayland-sessions/`, `/usr/share/xsessions/`
+ *
+ * @module
+ */
 
 import GLib from "gi://GLib";
 
+/**
+ * A desktop session discovered from a `.desktop` file.
+ */
 export type Session = {
+  /** Display name from the `Name` field in the `.desktop` file. */
   name: string;
+  /** Exec command from the `Exec` field in the `.desktop` file. */
   exec: string;
 };
 
+/**
+ * Discovers available desktop sessions from `.desktop` files.
+ */
 export class SessionManager {
   private readonly dirs: string[];
 
+  /**
+   * @param dirs - Directories to search for `.desktop` session files.
+   */
   constructor(dirs: string[]) {
     this.dirs = dirs;
   }
 
+  /**
+   * Scan configured directories for `.desktop` files and return
+   * the discovered sessions.
+   *
+   * @returns Array of sessions with display names and exec commands.
+   */
   getSessions(): Session[] {
     const sessions: Session[] = [];
 
@@ -40,6 +61,8 @@ export class SessionManager {
             }
           } catch (_) {
             // skip invalid desktop files
+          } finally {
+            kf.unref();
           }
         }
       } finally {
@@ -50,4 +73,3 @@ export class SessionManager {
     return sessions;
   }
 }
-

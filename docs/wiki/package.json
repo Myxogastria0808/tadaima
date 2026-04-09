@@ -1,0 +1,19 @@
+{
+  "name": "tadaima-wiki",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "catalog:wiki",
+    "astro": "catalog:wiki",
+    "sharp": "catalog:wiki",
+    "wrangler": "catalog:wiki"
+  }
+}
+

@@ -1,6 +1,0 @@
-@girs/
-node_modules/
-src/@girs/
-src/node_modules/
-src/env.d.ts
-src/tsconfig.json

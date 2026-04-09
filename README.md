@@ -235,13 +235,13 @@ const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
 
 Returns:
 
-| Property              | Type                                           | Description                                   |
-| --------------------- | ---------------------------------------------- | --------------------------------------------- |
-| `sessions`            | `Session[]`                                    | Available sessions from `.desktop` files       |
-| `sessionNames`        | `string[]`                                     | Session display names (for dropdowns)          |
-| `cache.username`      | `string`                                       | Last authenticated username (or `""`)          |
-| `cache.sessionIndex`  | `number`                                       | Index of last session in `sessions` (or `-1`)  |
-| `createLoginHandler`  | `(callbacks) => () => Promise<void>`           | Create a login handler function                |
+| Property             | Type                                 | Description                                   |
+| -------------------- | ------------------------------------ | --------------------------------------------- |
+| `sessions`           | `Session[]`                          | Available sessions from `.desktop` files      |
+| `sessionNames`       | `string[]`                           | Session display names (for dropdowns)         |
+| `cache.username`     | `string`                             | Last authenticated username (or `""`)         |
+| `cache.sessionIndex` | `number`                             | Index of last session in `sessions` (or `-1`) |
+| `createLoginHandler` | `(callbacks) => () => Promise<void>` | Create a login handler function               |
 
 ### `createLoginHandler(callbacks)`
 
@@ -278,11 +278,15 @@ const handleLogin = createLoginHandler({
 ```typescript
 type Session = { name: string; exec: string };
 type CachedState = { user: string; session: string };
-type LoginResult = { success: true } | { success: false; message: string };
+type LoginResult = { type: "success" } | { type: "error"; description: string };
 type GreetdResponse =
   | { type: "success" }
   | { type: "error"; error_type: "auth_error" | "error"; description: string }
-  | { type: "auth_message"; auth_message_type: "visible" | "secret" | "info" | "error"; auth_message: string };
+  | {
+      type: "auth_message";
+      auth_message_type: "visible" | "secret" | "info" | "error";
+      auth_message: string;
+    };
 type LoginHandlerCallbacks = {
   username: () => string;
   password: () => string;
