@@ -1,5 +1,5 @@
 {
-  "name": "tadaima",
+  "name": "tadaima-workspace",
   "private": true,
   "scripts": {
     "setup": "pnpm install && sh scripts/types.sh",
@@ -15,8 +15,7 @@
     "wiki:astro": "pnpm -C docs/wiki astro",
     "nix:build:simple": "sh scripts/build.sh simple",
     "nix:build:image": "sh scripts/build.sh image",
-    "nix:build:movie": "sh scripts/build.sh movie",
-    "nix:build": "sh scripts/build.sh"
+    "nix:build:movie": "sh scripts/build.sh movie"
   },
   "packageManager": "pnpm@10.18.0",
   "devDependencies": {

@@ -24,6 +24,7 @@ cd examples/simple && npm install && ags bundle app.tsx ./greeter
 Static image wallpaper with Catppuccin Mocha theme.
 
 Demonstrates:
+
 - `Gtk.Picture` + `Gtk.Overlay` for background images
 - SCSS styling with `app.apply_css()`
 - Why GTK4 CSS `background-image: url()` doesn't work with absolute paths ([GTK issue #5648](https://gitlab.gnome.org/GNOME/gtk/-/issues/5648))
@@ -41,6 +42,7 @@ cd examples/image && npm install && ags bundle app.tsx ./greeter
 Video/image wallpaper with GStreamer support.
 
 Demonstrates:
+
 - `Gtk.MediaFile` + `Gtk.Picture` for looping video backgrounds
 - Why `Gtk.Video` isn't used (always shows playback controls)
 - Dynamic wallpaper detection from cache directory
@@ -55,3 +57,4 @@ nix build github:Myxogastria0808/tadaima#movie
 # Arch-based
 cd examples/movie && npm install && ags bundle app.tsx ./greeter
 ```
+

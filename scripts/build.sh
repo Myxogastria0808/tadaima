@@ -14,7 +14,7 @@ info() { printf "${YELLOW}[info]${RESET} %s\n" "$1"; }
 TARGET="$1"
 
 if [ -z "$TARGET" ]; then
-	error "Usage: pnpm run build <simple|image|movie>"
+	error "Usage: pnpm run nix:build:<simple|image|movie>"
 	exit 1
 fi
 

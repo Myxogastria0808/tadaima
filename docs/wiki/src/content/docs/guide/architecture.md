@@ -38,6 +38,7 @@ cage does not support the `wlr-layer-shell` protocol, so AGS's `<window>`
 `Gtk.ApplicationWindow` instead.
 
 Flags:
+
 - `-s` — exit when the last client closes
 - `-d` — allow startup without a GPU backend
 
@@ -79,3 +80,4 @@ Wire format: 4-byte length prefix (host byte order) + UTF-8 JSON payload.
 { "type": "error", "error_type": "auth_error", "description": "..." }
 { "type": "auth_message", "auth_message_type": "secret", "auth_message": "Password:" }
 ```
+

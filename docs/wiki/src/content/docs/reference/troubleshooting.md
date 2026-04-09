@@ -40,6 +40,7 @@ protocol directly and checks each response.
 Video playback requires GStreamer with appropriate codec plugins.
 
 **Fix (NixOS)**: Add GStreamer packages to `buildInputs`:
+
 ```nix
 pkgs.gst_all_1.gstreamer
 pkgs.gst_all_1.gst-plugins-base
@@ -67,3 +68,4 @@ This is a security feature to prevent brute-force attacks. The delay is
 randomized and cannot be disabled from the greeter side.
 
 tadaima uses async I/O to avoid blocking the GTK main loop during this wait.
+

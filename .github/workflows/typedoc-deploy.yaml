@@ -19,8 +19,10 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       # Build
+      - name: Generate type definitions
+        run: nix develop --command bash -c "pnpm i && pnpm run types"
       - name: Build Typedoc
-        run: nix develop --command bash -c "pnpm i && pnpm run typedoc:build"
+        run: nix develop --command bash -c "pnpm run typedoc:build"
       # Deploy Typedoc to GitHub Pages
       - name: Deploy Typedoc to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

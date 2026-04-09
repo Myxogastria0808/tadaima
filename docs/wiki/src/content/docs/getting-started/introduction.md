@@ -34,3 +34,4 @@ greetd → dbus-run-session → cage → your greeter binary
 - **cage** automatically fullscreens your application
 - **dbus-run-session** provides a D-Bus session bus for the greeter process
 - **greetd** manages authentication via PAM and session lifecycle
+

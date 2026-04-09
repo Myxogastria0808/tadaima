@@ -16,20 +16,20 @@ const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
 
 ### Config
 
-| Option | Type | Description |
-|---|---|---|
+| Option        | Type       | Description                                        |
+| ------------- | ---------- | -------------------------------------------------- |
 | `sessionDirs` | `string[]` | Directories to search for `.desktop` session files |
-| `cachePath` | `string` | Path to the JSON state cache file |
+| `cachePath`   | `string`   | Path to the JSON state cache file                  |
 
 ### Return value
 
-| Property | Type | Description |
-|---|---|---|
-| `sessions` | `Session[]` | Available sessions from `.desktop` files |
-| `sessionNames` | `string[]` | Session display names (for dropdowns) |
-| `cache.username` | `string` | Last authenticated username (or `""`) |
-| `cache.sessionIndex` | `number` | Index of last session in `sessions` (or `-1`) |
-| `createLoginHandler` | `(callbacks) => () => Promise<void>` | Create a login handler function |
+| Property             | Type                                 | Description                                   |
+| -------------------- | ------------------------------------ | --------------------------------------------- |
+| `sessions`           | `Session[]`                          | Available sessions from `.desktop` files      |
+| `sessionNames`       | `string[]`                           | Session display names (for dropdowns)         |
+| `cache.username`     | `string`                             | Last authenticated username (or `""`)         |
+| `cache.sessionIndex` | `number`                             | Index of last session in `sessions` (or `-1`) |
+| `createLoginHandler` | `(callbacks) => () => Promise<void>` | Create a login handler function               |
 
 ## createLoginHandler
 
@@ -76,13 +76,15 @@ Use the handler directly as an event handler:
 ```typescript
 type Session = { name: string; exec: string };
 type CachedState = { user: string; session: string };
-type LoginResult =
-  | { type: "success" }
-  | { type: "error"; description: string };
+type LoginResult = { type: "success" } | { type: "error"; description: string };
 type GreetdResponse =
   | { type: "success" }
   | { type: "error"; error_type: "auth_error" | "error"; description: string }
-  | { type: "auth_message"; auth_message_type: "visible" | "secret" | "info" | "error"; auth_message: string };
+  | {
+      type: "auth_message";
+      auth_message_type: "visible" | "secret" | "info" | "error";
+      auth_message: string;
+    };
 type LoginHandlerCallbacks = {
   username: () => string;
   password: () => string;
@@ -95,7 +97,8 @@ type LoginHandlerCallbacks = {
 
 ## Session directories
 
-| Distro | Wayland | X11 |
-|---|---|---|
-| NixOS | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
-| Arch-based | `/usr/share/wayland-sessions/` | `/usr/share/xsessions/` |
+| Distro     | Wayland                                          | X11                                       |
+| ---------- | ------------------------------------------------ | ----------------------------------------- |
+| NixOS      | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
+| Arch-based | `/usr/share/wayland-sessions/`                   | `/usr/share/xsessions/`                   |
+

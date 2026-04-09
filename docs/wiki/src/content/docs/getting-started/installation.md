@@ -144,3 +144,4 @@ sudo systemctl enable greetd
    sudo chown greeter:greeter /var/cache/tadaima
    sudo systemctl enable greetd
    ```
+
