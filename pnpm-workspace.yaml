@@ -8,7 +8,7 @@ catalogs:
     browser-sync: ^3.0.4
     typedoc: ^0.28.18
   wiki:
-    "@astrojs/starlight": ^0.38.3
+    '@astrojs/starlight': ^0.38.3
     astro: ^6.0.1
     sharp: ^0.34.2
     wrangler: ^4.81.0
@@ -16,4 +16,4 @@ catalogs:
 onlyBuiltDependencies:
   - esbuild
   - sharp
-
+  - workerd
