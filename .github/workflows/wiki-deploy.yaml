@@ -22,6 +22,8 @@ jobs:
       # Build
       - name: Build
         run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
       # Deploy Wiki to Cloudflare Workers
       - name: Deploy Typedoc to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
