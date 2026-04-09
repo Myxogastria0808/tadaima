@@ -68,4 +68,3 @@ This is a security feature to prevent brute-force attacks. The delay is
 randomized and cannot be disabled from the greeter side.
 
 tadaima uses async I/O to avoid blocking the GTK main loop during this wait.
-

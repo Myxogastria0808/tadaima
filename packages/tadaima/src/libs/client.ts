@@ -11,18 +11,16 @@
 // - greetd IPC protocol: https://man.archlinux.org/man/greetd-ipc.7.en
 // - greetd retry design: https://github.com/apognu/tuigreet/issues/24
 
-import GLib from "gi://GLib";
-import { greetd } from "./greetd";
-import { CacheManager } from "./cache";
-import { SessionManager } from "./sessions";
-import type { Session } from "./sessions";
+import GLib from 'gi://GLib';
+import { greetd } from './greetd';
+import { CacheManager } from './cache';
+import { SessionManager } from './sessions';
+import type { Session } from './sessions';
 
 /**
  * Result of a login attempt, matching greetd-ipc response schema.
  */
-export type LoginResult =
-  | { type: "success" }
-  | { type: "error"; description: string };
+export type LoginResult = { type: 'success' } | { type: 'error'; description: string };
 
 /**
  * Configuration for {@link createGreeter}.
@@ -75,36 +73,30 @@ export const createGreeter = (config: GreeterConfig) => {
   const cache = new CacheManager(config.cachePath);
   const sessionManager = new SessionManager(config.sessionDirs);
 
-  const login = async (
-    username: string,
-    password: string,
-    exec: string,
-  ): Promise<LoginResult> => {
+  const login = async (username: string, password: string, exec: string): Promise<LoginResult> => {
     try {
       // Step 1: Create session for the given username
       const createRes = await greetd.createSession(username);
-      if (createRes.type === "error")
-        throw new Error(createRes.description ?? "Failed to create session");
+      if (createRes.type === 'error') throw new Error(createRes.description ?? 'Failed to create session');
 
       // Step 2: Post password
       const authRes = await greetd.postAuthResponse(password);
-      if (authRes.type === "error") {
+      if (authRes.type === 'error') {
         await greetd.cancelSession();
-        throw new Error(authRes.description ?? "Authentication failed");
+        throw new Error(authRes.description ?? 'Authentication failed');
       }
 
       // Step 3: Parse the session command and start it
       const [, argv] = GLib.shell_parse_argv(exec);
-      if (!argv) throw new Error("Failed to parse session command");
+      if (!argv) throw new Error('Failed to parse session command');
 
       const startRes = await greetd.startSession(argv);
-      if (startRes.type === "error")
-        throw new Error(startRes.description ?? "Failed to start session");
+      if (startRes.type === 'error') throw new Error(startRes.description ?? 'Failed to start session');
 
-      return { type: "success" as const };
+      return { type: 'success' as const };
     } catch (e) {
       return {
-        type: "error" as const,
+        type: 'error' as const,
         description: e instanceof Error ? e.message : String(e),
       };
     }
@@ -136,7 +128,7 @@ export const createGreeter = (config: GreeterConfig) => {
 
       const session = callbacks.selectedSession();
       if (!session) {
-        callbacks.onError("No session selected");
+        callbacks.onError('No session selected');
         return;
       }
 
@@ -145,13 +137,9 @@ export const createGreeter = (config: GreeterConfig) => {
 
       try {
         const username = callbacks.username();
-        const result = await login(
-          username,
-          callbacks.password(),
-          session.exec,
-        );
+        const result = await login(username, callbacks.password(), session.exec);
 
-        if (result.type === "success") {
+        if (result.type === 'success') {
           cache.save(username, session.name);
           callbacks.onSuccess?.();
         } else {
@@ -174,13 +162,10 @@ export const createGreeter = (config: GreeterConfig) => {
     /** Cached state from the last successful login. */
     cache: {
       /** Last authenticated username, or `""` if no cache. */
-      username: cached?.user ?? "",
+      username: cached?.user ?? '',
       /** Index of last session in `sessions`, or `-1` if not found. */
-      sessionIndex: cached?.session
-        ? sessions.findIndex((s) => s.name === cached.session)
-        : -1,
+      sessionIndex: cached?.session ? sessions.findIndex((s) => s.name === cached.session) : -1,
     },
     createLoginHandler,
   };
 };
-

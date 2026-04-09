@@ -13,8 +13,26 @@ info() { printf "${YELLOW}[info]${RESET} %s\n" "$1"; }
 
 TARGET="$1"
 
+usage() {
+	printf "\n"
+	printf "  ${YELLOW}Usage:${RESET}\n"
+	printf "    pnpm run nix:build <target>\n"
+	printf "    pnpm run nix:build:<target>\n"
+	printf "\n"
+	printf "  ${YELLOW}Targets:${RESET}\n"
+	printf "    simple   Bare-minimum login form, no wallpaper\n"
+	printf "    image    Static image wallpaper + Catppuccin Mocha\n"
+	printf "    movie    Video/image wallpaper + GStreamer\n"
+	printf "\n"
+	printf "  ${YELLOW}Examples:${RESET}\n"
+	printf "    pnpm run nix:build simple\n"
+	printf "    pnpm run nix:build:movie\n"
+	printf "\n"
+}
+
 if [ -z "$TARGET" ]; then
-	error "Usage: pnpm run nix:build:<simple|image|movie>"
+	error "No target specified."
+	usage
 	exit 1
 fi
 
@@ -22,7 +40,7 @@ case "$TARGET" in
 simple | image | movie) ;;
 *)
 	error "Unknown target: $TARGET"
-	error "Valid targets: simple, image, movie"
+	usage
 	exit 1
 	;;
 esac

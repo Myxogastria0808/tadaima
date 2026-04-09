@@ -1,0 +1,44 @@
+{
+  "name": "tadaima-cli",
+  "version": "0.0.1",
+  "description": "Scaffold a tadaima greeter project",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Myxogastria0808/tadaima",
+    "directory": "packages/tadaima-cli"
+  },
+  "bin": {
+    "create-tadaima": "./dist/cli.js"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "templates/"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/app.tsx",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "test": "vitest run --typecheck"
+  },
+  "dependencies": {
+    "ink": "catalog:cli",
+    "meow": "catalog:cli",
+    "react": "catalog:cli"
+  },
+  "devDependencies": {
+    "@sindresorhus/tsconfig": "catalog:cli",
+    "@types/react": "catalog:cli",
+    "chalk": "catalog:cli",
+    "ink-testing-library": "catalog:cli",
+    "tsx": "catalog:cli",
+    "typescript": "catalog:cli",
+    "vitest": "catalog:cli"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

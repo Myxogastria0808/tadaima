@@ -1,15 +1,36 @@
 packages:
-  - package
+  - packages/*
   - examples/*
   - docs/wiki
 
+catalog:
+  oxfmt: ^0.44.0
+  oxlint: ^1.59.0
+
 catalogs:
+  cli:
+    ink: ^7.0.0
+    meow: ^14.1.0
+    react: ^19.2.5
+    '@sindresorhus/tsconfig': ^8.1.0
+    '@types/react': ^19.2.14
+    chalk: ^5.6.2
+    ink-testing-library: ^4.0.0
+    tsx: ^4.21.0
+    typescript: ^6.0.2
+    vitest: ^4.1.4
+
   typedoc:
     browser-sync: ^3.0.4
     typedoc: ^0.28.18
   wiki:
     '@astrojs/starlight': ^0.38.3
+    '@typescript-eslint/parser': ^8.58.1
     astro: ^6.0.1
+    eslint: ^10.2.0
+    eslint-plugin-astro: ^1.7.0
+    prettier: ^3.8.1
+    prettier-plugin-astro: ^0.14.1
     sharp: ^0.34.2
     wrangler: ^4.81.0
 

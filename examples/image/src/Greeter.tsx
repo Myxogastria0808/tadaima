@@ -1,24 +1,20 @@
 // Image wallpaper greeter example using tadaima.
 // Uses Gtk.ApplicationWindow (not Astal.Window) for cage compatibility.
 
-import app from "ags/gtk4/app";
-import { Gtk } from "ags/gtk4";
-import Gio from "gi://Gio";
-import style from "./style.scss";
-import { createGreeter } from "tadaima";
+import app from 'ags/gtk4/app';
+import { Gtk } from 'ags/gtk4';
+import Gio from 'gi://Gio';
+import style from './style.scss';
+import { createGreeter } from 'tadaima';
 
-const WALLPAPER_PATH =
-  "/run/current-system/sw/share/backgrounds/nixos/nix-wallpaper-nineish-solarized-dark.png";
+const WALLPAPER_PATH = '/run/current-system/sw/share/backgrounds/nixos/nix-wallpaper-nineish-solarized-dark.png';
 
 const Greeter = (): void => {
   app.apply_css(style);
 
   const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
-    sessionDirs: [
-      "/run/current-system/sw/share/wayland-sessions",
-      "/run/current-system/sw/share/xsessions",
-    ],
-    cachePath: "/var/cache/tadaima/state.json",
+    sessionDirs: ['/run/current-system/sw/share/wayland-sessions', '/run/current-system/sw/share/xsessions'],
+    cachePath: '/var/cache/tadaima/state.json',
   });
 
   let usernameEntry!: Gtk.Entry;
@@ -34,15 +30,15 @@ const Greeter = (): void => {
     onLoggingIn: () => {
       errorLabel.visible = false;
       loginButton.sensitive = false;
-      loginButton.label = "Logging in...";
+      loginButton.label = 'Logging in...';
     },
     onError: (message) => {
       errorLabel.label = message;
       errorLabel.visible = true;
-      passwordEntry.text = "";
+      passwordEntry.text = '';
       passwordEntry.grab_focus();
       loginButton.sensitive = true;
-      loginButton.label = "Login";
+      loginButton.label = 'Login';
     },
   });
 
@@ -64,9 +60,9 @@ const Greeter = (): void => {
           orientation={Gtk.Orientation.VERTICAL}
           valign={Gtk.Align.CENTER}
           halign={Gtk.Align.CENTER}
-          cssClasses={["login-box"]}
+          cssClasses={['login-box']}
         >
-          <Gtk.Label label="Welcome to NixOS" cssClasses={["greeting"]} />
+          <Gtk.Label label="Welcome to NixOS" cssClasses={['greeting']} />
           <Gtk.Entry
             text={cache.username}
             placeholderText="Username"
@@ -80,24 +76,13 @@ const Greeter = (): void => {
             $={(self) => (passwordEntry = self)}
           />
           <Gtk.DropDown
-            $constructor={() =>
-              Gtk.DropDown.new_from_strings(sessionNames)
-            }
+            $constructor={() => Gtk.DropDown.new_from_strings(sessionNames)}
             selected={cache.sessionIndex}
-            cssClasses={["session-dropdown"]}
+            cssClasses={['session-dropdown']}
             $={(self) => (sessionDropdown = self)}
           />
-          <Gtk.Label
-            label=""
-            visible={false}
-            cssClasses={["error"]}
-            $={(self) => (errorLabel = self)}
-          />
-          <Gtk.Button
-            label="Login"
-            onClicked={handleLogin}
-            $={(self) => (loginButton = self)}
-          />
+          <Gtk.Label label="" visible={false} cssClasses={['error']} $={(self) => (errorLabel = self)} />
+          <Gtk.Button label="Login" onClicked={handleLogin} $={(self) => (loginButton = self)} />
         </Gtk.Box>
       </Gtk.Overlay>
     </Gtk.ApplicationWindow>

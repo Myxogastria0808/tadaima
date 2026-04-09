@@ -55,7 +55,7 @@ myGreeter = pkgs.stdenv.mkDerivation {
 
   preBuild = ''
     mkdir -p node_modules
-    ln -s ${inputs.tadaima}/package/src node_modules/tadaima
+    ln -s ${inputs.tadaima}/packages/tadaima/src node_modules/tadaima
   '';
 
   installPhase = ''
@@ -144,4 +144,3 @@ sudo systemctl enable greetd
    sudo chown greeter:greeter /var/cache/tadaima
    sudo systemctl enable greetd
    ```
-

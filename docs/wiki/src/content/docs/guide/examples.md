@@ -57,4 +57,3 @@ nix build github:Myxogastria0808/tadaima#movie
 # Arch-based
 cd examples/movie && npm install && ags bundle app.tsx ./greeter
 ```
-

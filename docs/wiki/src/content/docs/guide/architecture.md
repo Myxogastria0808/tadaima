@@ -80,4 +80,3 @@ Wire format: 4-byte length prefix (host byte order) + UTF-8 JSON payload.
 { "type": "error", "error_type": "auth_error", "description": "..." }
 { "type": "auth_message", "auth_message_type": "secret", "auth_message": "Password:" }
 ```
-

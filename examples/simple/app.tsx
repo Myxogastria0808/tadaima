@@ -1,13 +1,12 @@
-import app from "ags/gtk4/app";
-import Greeter from "./src/Greeter";
+import app from 'ags/gtk4/app';
+import Greeter from './src/Greeter';
 
 app.start({
-  instanceName: "greeter",
+  instanceName: 'greeter',
   requestHandler(_, response) {
-    response("not implemented");
+    response('not implemented');
   },
   main() {
     Greeter();
   },
 });
-

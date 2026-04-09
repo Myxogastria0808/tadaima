@@ -11,27 +11,23 @@
  * @module
  */
 
-import Gio from "gi://Gio";
-import GLib from "gi://GLib";
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 // Enable async/await for InputStream.read_bytes_async.
 // This is a standard GJS pattern (not Astal-specific).
 // See: https://gjs.guide/guides/gjs/asynchronous-programming.html
-Gio._promisify(
-  Gio.InputStream.prototype,
-  "read_bytes_async",
-  "read_bytes_finish",
-);
+Gio._promisify(Gio.InputStream.prototype, 'read_bytes_async', 'read_bytes_finish');
 
 /**
  * A response from greetd, matching the greetd-ipc(7) JSON schema.
  */
 export type GreetdResponse =
-  | { type: "success" }
-  | { type: "error"; error_type: "auth_error" | "error"; description: string }
+  | { type: 'success' }
+  | { type: 'error'; error_type: 'auth_error' | 'error'; description: string }
   | {
-      type: "auth_message";
-      auth_message_type: "visible" | "secret" | "info" | "error";
+      type: 'auth_message';
+      auth_message_type: 'visible' | 'secret' | 'info' | 'error';
       auth_message: string;
     };
 
@@ -46,9 +42,9 @@ export type GreetdResponse =
  * @throws If `GREETD_SOCK` is not set, or the response is invalid.
  */
 const send = async (request: object): Promise<GreetdResponse> => {
-  const sockPath = GLib.getenv("GREETD_SOCK");
+  const sockPath = GLib.getenv('GREETD_SOCK');
   if (!sockPath) {
-    throw new Error("GREETD_SOCK environment variable is not set");
+    throw new Error('GREETD_SOCK environment variable is not set');
   }
   // Connect to greetd Unix socket
   const addr = Gio.UnixSocketAddress.new(sockPath);
@@ -77,14 +73,10 @@ const send = async (request: object): Promise<GreetdResponse> => {
       const chunks: Uint8Array[] = [];
       let remaining = count;
       while (remaining > 0) {
-        const bytes = await istream.read_bytes_async(
-          remaining,
-          GLib.PRIORITY_DEFAULT,
-          null,
-        );
+        const bytes = await istream.read_bytes_async(remaining, GLib.PRIORITY_DEFAULT, null);
         const chunk = bytes.toArray();
         if (chunk.length === 0) {
-          throw new Error("Unexpected end of stream from greetd");
+          throw new Error('Unexpected end of stream from greetd');
         }
         chunks.push(chunk);
         remaining -= chunk.length;
@@ -99,9 +91,7 @@ const send = async (request: object): Promise<GreetdResponse> => {
     };
 
     const headBytes = await readAllBytes(4);
-    const distream = Gio.DataInputStream.new(
-      Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(headBytes)),
-    );
+    const distream = Gio.DataInputStream.new(Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(headBytes)));
     distream.set_byte_order(Gio.DataStreamByteOrder.HOST_ENDIAN);
     const length = distream.read_int32(null);
     distream.close(null);
@@ -134,15 +124,14 @@ export const greetd = {
    * Initiate a login attempt for the given username.
    * @param username - The username to authenticate.
    */
-  createSession: (username: string): Promise<GreetdResponse> =>
-    send({ type: "create_session", username }),
+  createSession: (username: string): Promise<GreetdResponse> => send({ type: 'create_session', username }),
 
   /**
    * Respond to an authentication challenge (e.g. password prompt).
    * @param response - The authentication response (typically a password).
    */
   postAuthResponse: (response: string): Promise<GreetdResponse> =>
-    send({ type: "post_auth_message_response", response }),
+    send({ type: 'post_auth_message_response', response }),
 
   /**
    * Start the authenticated session with the given command.
@@ -150,12 +139,10 @@ export const greetd = {
    * @param env - Optional environment variables as `KEY=VALUE` strings.
    */
   startSession: (cmd: string[], env: string[] = []): Promise<GreetdResponse> =>
-    send({ type: "start_session", cmd, env }),
+    send({ type: 'start_session', cmd, env }),
 
   /**
    * Cancel the current session configuration.
    */
-  cancelSession: (): Promise<GreetdResponse> =>
-    send({ type: "cancel_session" }),
+  cancelSession: (): Promise<GreetdResponse> => send({ type: 'cancel_session' }),
 } as const;
-

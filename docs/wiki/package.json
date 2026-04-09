@@ -15,7 +15,11 @@
     "sharp": "catalog:wiki"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "catalog:wiki",
+    "eslint": "catalog:wiki",
+    "eslint-plugin-astro": "catalog:wiki",
+    "prettier": "catalog:wiki",
+    "prettier-plugin-astro": "catalog:wiki",
     "wrangler": "catalog:wiki"
   }
 }
-

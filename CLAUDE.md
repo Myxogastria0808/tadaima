@@ -11,11 +11,13 @@ tadaima is a [greetd](https://sr.ht/~kennylevinsen/greetd/) greeter library for 
 ## Development Setup
 
 Requires Nix. Enter the dev environment:
+
 ```sh
 direnv allow   # or: nix develop
 ```
 
 Install dependencies and generate type definitions:
+
 ```sh
 pnpm run setup   # runs pnpm install + scripts/types.sh
 ```
@@ -23,6 +25,7 @@ pnpm run setup   # runs pnpm install + scripts/types.sh
 ## Common Commands
 
 ### Build example greeters (Nix)
+
 ```sh
 nix build .#simple
 nix build .#image
@@ -30,6 +33,7 @@ nix build .#movie
 ```
 
 ### Documentation
+
 ```sh
 pnpm run typedoc:build      # Generate API docs (TypeDoc)
 pnpm run typedoc:preview    # Preview API docs locally
@@ -38,6 +42,7 @@ pnpm run wiki:build         # Build wiki for deployment
 ```
 
 ### Package publishing
+
 ```sh
 pnpm run package:pub        # Publish to npm
 ```
@@ -45,6 +50,7 @@ pnpm run package:pub        # Publish to npm
 ## Architecture
 
 ### Runtime chain
+
 ```
 greetd → dbus-run-session → cage (Wayland kiosk) → greeter binary (AGS)
 ```
@@ -53,20 +59,20 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 
 ### Monorepo structure (pnpm workspaces)
 
-- **`package/`** — The npm library (`tadaima`). Source is in `package/src/`.
+- **`packages/tadaima/`** — The npm library (`tadaima`). Source is in `packages/tadaima/src/`.
 - **`examples/`** — Three example greeters (simple, image, movie). Each depends on `tadaima: workspace:*`.
 - **`docs/wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
 - **`nix/module.nix`** — NixOS service module (`services.tadaima`).
 - **`@girs/`** — GObject Introspection type definitions (generated, not hand-written).
 
-### Library modules (`package/src/libs/`)
+### Library modules (`packages/tadaima/src/libs/`)
 
 - **`client.ts`** — `createGreeter()` factory and `createLoginHandler()` with concurrency guard.
 - **`greetd.ts`** — Low-level greetd-ipc(7) protocol: JSON over Unix socket, async GIO streams.
 - **`sessions.ts`** — `SessionManager`: discovers and parses `.desktop` session files.
 - **`cache.ts`** — `CacheManager`: JSON state persistence with atomic writes (temp file + rename).
 
-Public API is re-exported from `package/src/index.ts`.
+Public API is re-exported from `packages/tadaima/src/index.ts`.
 
 ## TypeScript Configuration
 

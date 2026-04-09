@@ -2,21 +2,32 @@
   "name": "tadaima-workspace",
   "private": true,
   "scripts": {
-    "setup": "pnpm install && sh scripts/types.sh && pnpm run wiki:build",
-    "types": "sh scripts/types.sh",
-    "package:pub": "pnpm -C package pub",
-    "package:unpub": "pnpm -C package unpub",
-    "typedoc:build": "pnpm -C package typedoc:build",
-    "typedoc:preview": "pnpm -C package typedoc:preview",
+    "setup": "pnpm install && pnpm run ags:types && pnpm run wiki:build",
+    "fmt": "oxfmt --write '!**/*.astro' . && pnpm -C docs/wiki exec prettier --write '**/*.astro'",
+    "fmt:check": "oxfmt --check '!**/*.astro' . && pnpm -C docs/wiki exec prettier --check '**/*.astro'",
+    "lint": "oxlint --ignore-pattern '**/*.astro' . && pnpm -C docs/wiki exec eslint .",
+    "package:tadaima:pub": "pnpm -C packages/tadaima pub",
+    "package:tadaima:unpub": "pnpm -C packages/tadaima unpub",
+    "package:tadaima-cli:dev": "tsx src/app.tsx",
+    "package:tadaima-cli:build": "tsc",
+    "package:tadaima-cli:start": "node dist/app.js",
+    "package:tadaima-cli:test": "vitest run --typecheck",
+    "typedoc:build": "pnpm -C packages/tadaima typedoc:build",
+    "typedoc:preview": "pnpm -C packages/tadaima typedoc:preview",
     "wiki:dev": "pnpm -C docs/wiki dev",
     "wiki:start": "pnpm -C docs/wiki start",
     "wiki:build": "pnpm -C docs/wiki build",
     "wiki:preview": "pnpm -C docs/wiki preview",
     "wiki:astro": "pnpm -C docs/wiki astro",
+    "ags:types": "sh scripts/types.sh",
     "nix:build:simple": "sh scripts/build.sh simple",
     "nix:build:image": "sh scripts/build.sh image",
-    "nix:build:movie": "sh scripts/build.sh movie"
+    "nix:build:movie": "sh scripts/build.sh movie",
+    "nix:build": "sh scripts/build.sh"
+  },
+  "devDependencies": {
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:"
   },
   "packageManager": "pnpm@10.33.0"
 }
-

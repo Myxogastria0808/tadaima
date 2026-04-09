@@ -6,7 +6,7 @@ permissions:
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ['main']
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
@@ -34,10 +34,10 @@ jobs:
         continue-on-error: true
         uses: cloudflare/wrangler-action@v3
         with:
-          wranglerVersion: "4.81.0"
+          wranglerVersion: '4.81.0'
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: "docs/wiki"
+          workingDirectory: 'docs/wiki'
           command: |
             versions upload --message "Deployed a Preview by GitHub Actions: branch ${{ github.ref_name }}"
       - name: Create Preview Summary File (Success Pattern)
@@ -109,4 +109,3 @@ jobs:
         run: |
           echo "Deploy failed"
           exit 1
-

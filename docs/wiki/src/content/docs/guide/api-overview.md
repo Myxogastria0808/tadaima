@@ -6,11 +6,11 @@ description: How to use the tadaima API
 ## createGreeter
 
 ```typescript
-import { createGreeter } from "tadaima";
+import { createGreeter } from 'tadaima';
 
 const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
-  sessionDirs: ["/usr/share/wayland-sessions", "/usr/share/xsessions"],
-  cachePath: "/var/cache/tadaima/state.json",
+  sessionDirs: ['/usr/share/wayland-sessions', '/usr/share/xsessions'],
+  cachePath: '/var/cache/tadaima/state.json',
 });
 ```
 
@@ -43,7 +43,7 @@ const handleLogin = createLoginHandler({
   selectedSession: () => sessions[sessionDropdown.selected],
   onLoggingIn: () => {
     loginButton.sensitive = false;
-    loginButton.label = "Logging in...";
+    loginButton.label = 'Logging in...';
   },
   onSuccess: () => {
     // Called after successful login (state is already saved)
@@ -51,10 +51,10 @@ const handleLogin = createLoginHandler({
   onError: (message) => {
     errorLabel.label = message;
     errorLabel.visible = true;
-    passwordEntry.text = "";
+    passwordEntry.text = '';
     passwordEntry.grab_focus();
     loginButton.sensitive = true;
-    loginButton.label = "Login";
+    loginButton.label = 'Login';
   },
 });
 ```
@@ -76,13 +76,13 @@ Use the handler directly as an event handler:
 ```typescript
 type Session = { name: string; exec: string };
 type CachedState = { user: string; session: string };
-type LoginResult = { type: "success" } | { type: "error"; description: string };
+type LoginResult = { type: 'success' } | { type: 'error'; description: string };
 type GreetdResponse =
-  | { type: "success" }
-  | { type: "error"; error_type: "auth_error" | "error"; description: string }
+  | { type: 'success' }
+  | { type: 'error'; error_type: 'auth_error' | 'error'; description: string }
   | {
-      type: "auth_message";
-      auth_message_type: "visible" | "secret" | "info" | "error";
+      type: 'auth_message';
+      auth_message_type: 'visible' | 'secret' | 'info' | 'error';
       auth_message: string;
     };
 type LoginHandlerCallbacks = {
@@ -101,4 +101,3 @@ type LoginHandlerCallbacks = {
 | ---------- | ------------------------------------------------ | ----------------------------------------- |
 | NixOS      | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
 | Arch-based | `/usr/share/wayland-sessions/`                   | `/usr/share/xsessions/`                   |
-

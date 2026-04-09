@@ -8,7 +8,7 @@
  * @module
  */
 
-import GLib from "gi://GLib";
+import GLib from 'gi://GLib';
 
 /**
  * A desktop session discovered from a `.desktop` file.
@@ -49,13 +49,13 @@ export class SessionManager {
       try {
         let name: string | null;
         while ((name = d.read_name()) !== null) {
-          if (!name.endsWith(".desktop")) continue;
+          if (!name.endsWith('.desktop')) continue;
           const path = `${dir}/${name}`;
           const kf = new GLib.KeyFile();
           try {
             kf.load_from_file(path, GLib.KeyFileFlags.NONE);
-            const sessionName = kf.get_string("Desktop Entry", "Name");
-            const exec = kf.get_string("Desktop Entry", "Exec");
+            const sessionName = kf.get_string('Desktop Entry', 'Name');
+            const exec = kf.get_string('Desktop Entry', 'Exec');
             if (sessionName && exec) {
               sessions.push({ name: sessionName, exec });
             }

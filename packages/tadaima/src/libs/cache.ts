@@ -15,7 +15,7 @@
  * @module
  */
 
-import GLib from "gi://GLib";
+import GLib from 'gi://GLib';
 
 /**
  * Cached greeter state from the last successful login.
