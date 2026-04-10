@@ -12,9 +12,11 @@ catalogs:
     '@clack/prompts': ^1.2.0
     '@types/node': ^25.6.0
     '@types/validate-npm-package-name': ^4.0.2
+    '@vitest/coverage-v8': ^4.1.4
+    '@vitest/ui': ^4.1.4
     tsup: ^8.5.1
-    tsx: ^4.21.0
     validate-npm-package-name: ^7.0.2
+    vitest: ^4.1.4
 
   typedoc:
     browser-sync: ^3.0.4

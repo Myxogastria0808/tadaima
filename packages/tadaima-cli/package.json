@@ -19,10 +19,16 @@
   ],
   "type": "module",
   "scripts": {
+    "pub": "pnpm publish --access=public",
+    "unpub": "pnpm unpublish tadaima-cli@${npm_config_v}",
     "dev": "tsup && cd ../../ && mkdir -p tmp && cd tmp && node ../packages/tadaima-cli/dist/cli.js",
     "build": "tsup",
     "start": "node dist/cli.js",
-    "test": "vitest run --typecheck"
+    "test": "vitest run --typecheck",
+    "test:ui": "vitest --ui --typecheck",
+    "test:coverage": "vitest run --coverage --typecheck",
+    "typedoc:build": "typedoc",
+    "typedoc:preview": "browser-sync start --server ../../docs/api-cli --no-open"
   },
   "dependencies": {
     "@clack/prompts": "catalog:cli",
@@ -31,8 +37,12 @@
   "devDependencies": {
     "@types/node": "catalog:cli",
     "@types/validate-npm-package-name": "catalog:cli",
+    "@vitest/coverage-v8": "catalog:cli",
+    "@vitest/ui": "catalog:cli",
     "tsup": "catalog:cli",
-    "tsx": "catalog:cli"
+    "browser-sync": "catalog:typedoc",
+    "typedoc": "catalog:typedoc",
+    "vitest": "catalog:cli"
   },
   "engines": {
     "node": "^20.17.0 || >=22.9.0"
