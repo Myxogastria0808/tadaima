@@ -1,4 +1,4 @@
-name: wiki-preview
+name: preview-wiki
 
 permissions:
   contents: write

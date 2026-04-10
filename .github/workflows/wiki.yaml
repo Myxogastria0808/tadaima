@@ -1,4 +1,4 @@
-name: wiki-deploy
+name: wiki
 
 permissions:
   contents: read
