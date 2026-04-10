@@ -23,6 +23,6 @@ jobs:
         run: nix develop --command bash -c "pnpm run lint"
       - name: Format check
         run: nix develop --command bash -c "pnpm run fmt:check"
-      - name: Test
+      - name: Test (only tadaima-cli test)
         run: nix develop --command bash -c "pnpm run package:tadaima-cli:test"
 

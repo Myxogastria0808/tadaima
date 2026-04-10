@@ -71,7 +71,7 @@
 
           installPhase = ''
             mkdir -p $out/bin
-            ags bundle app.tsx $out/bin/greeter
+            ags bundle src/app.tsx $out/bin/greeter
           '';
         };
 
@@ -101,7 +101,7 @@
 
           installPhase = ''
             mkdir -p $out/bin
-            ags bundle app.tsx $out/bin/greeter
+            ags bundle src/app.tsx $out/bin/greeter
           '';
         };
 
@@ -142,7 +142,7 @@
 
           installPhase = ''
             mkdir -p $out/bin
-            ags bundle app.tsx $out/bin/greeter
+            ags bundle src/app.tsx $out/bin/greeter
           '';
         };
       };

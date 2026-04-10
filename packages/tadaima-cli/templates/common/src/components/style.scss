@@ -1,0 +1,40 @@
+window#greeter {
+  background-color: #1e1e2e;
+
+  .login-box {
+    background-color: #1e1e2e;
+    border-radius: 16px;
+    padding: 32px;
+    min-width: 350px;
+  }
+
+  .greeting {
+    color: #89b4fa;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  entry {
+    background-color: #313244;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+
+  .error {
+    color: #f38ba8;
+    margin-top: 8px;
+  }
+
+  button {
+    background-color: #89b4fa;
+    color: #1e1e2e;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-top: 12px;
+    font-weight: bold;
+  }
+}
+

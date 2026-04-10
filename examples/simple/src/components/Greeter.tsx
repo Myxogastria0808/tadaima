@@ -1,11 +1,14 @@
 // Minimal greeter example using tadaima.
-// No wallpaper, no styling — just the essential login form.
+// No wallpaper — just the essential login form with Catppuccin Mocha styling.
 
 import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
+import style from './style.scss';
 import { createGreeter } from 'tadaima';
 
 const Greeter = (): void => {
+  app.apply_css(style);
+
   const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
     sessionDirs: ['/usr/share/wayland-sessions', '/usr/share/xsessions'],
     cachePath: '/var/cache/tadaima/state.json',
@@ -38,8 +41,13 @@ const Greeter = (): void => {
 
   const win = (
     <Gtk.ApplicationWindow application={app} name="greeter">
-      <Gtk.Box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER} spacing={8}>
-        <Gtk.Label label="Login" />
+      <Gtk.Box
+        orientation={Gtk.Orientation.VERTICAL}
+        valign={Gtk.Align.CENTER}
+        halign={Gtk.Align.CENTER}
+        cssClasses={['login-box']}
+      >
+        <Gtk.Label label="Login" cssClasses={['greeting']} />
         <Gtk.Entry
           text={cache.username}
           placeholderText="Username"
@@ -57,7 +65,7 @@ const Greeter = (): void => {
           selected={cache.sessionIndex}
           $={(self) => (sessionDropdown = self)}
         />
-        <Gtk.Label label="" visible={false} $={(self) => (errorLabel = self)} />
+        <Gtk.Label label="" visible={false} cssClasses={['error']} $={(self) => (errorLabel = self)} />
         <Gtk.Button label="Login" onClicked={handleLogin} $={(self) => (loginButton = self)} />
       </Gtk.Box>
     </Gtk.ApplicationWindow>

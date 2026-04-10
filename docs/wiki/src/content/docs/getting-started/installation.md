@@ -60,7 +60,7 @@ myGreeter = pkgs.stdenv.mkDerivation {
 
   installPhase = ''
     mkdir -p $out/bin
-    ags bundle app.tsx $out/bin/greeter
+    ags bundle src/app.tsx $out/bin/greeter
   '';
 };
 
@@ -112,7 +112,7 @@ sudo systemctl enable greetd
    git clone https://github.com/Myxogastria0808/tadaima.git
    cd tadaima/examples/movie
    npm install
-   ags bundle app.tsx ./my-greeter
+   ags bundle src/app.tsx ./my-greeter
    ```
 
    Or build your own greeter:
@@ -122,7 +122,7 @@ sudo systemctl enable greetd
    npm init -y
    npm install tadaima
    ags types --update --directory .
-   ags bundle app.tsx ./my-greeter
+   ags bundle src/app.tsx ./my-greeter
    ```
 
 3. Configure greetd:

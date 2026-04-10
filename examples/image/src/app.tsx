@@ -1,6 +1,6 @@
 import app from 'ags/gtk4/app';
 import globalCss from './global.css';
-import Greeter from './src/Greeter';
+import Greeter from './components/Greeter';
 
 app.start({
   css: globalCss,

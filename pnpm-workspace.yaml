@@ -9,16 +9,12 @@ catalog:
 
 catalogs:
   cli:
-    ink: ^7.0.0
-    meow: ^14.1.0
-    react: ^19.2.5
-    '@sindresorhus/tsconfig': ^8.1.0
-    '@types/react': ^19.2.14
-    chalk: ^5.6.2
-    ink-testing-library: ^4.0.0
+    '@clack/prompts': ^1.2.0
+    '@types/node': ^25.6.0
+    '@types/validate-npm-package-name': ^4.0.2
+    tsup: ^8.5.1
     tsx: ^4.21.0
-    typescript: ^6.0.2
-    vitest: ^4.1.4
+    validate-npm-package-name: ^7.0.2
 
   typedoc:
     browser-sync: ^3.0.4
@@ -38,3 +34,4 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+
