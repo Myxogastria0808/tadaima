@@ -17,9 +17,9 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
-      - name: Install dependencies
+      - name: Install Dependencies
         run: nix develop --command bash -c "pnpm install"
-      - name: Generate type definitions
+      - name: Generate Type Definitions
         run: nix develop --command bash -c "pnpm run ags:types"
       - name: Build Typedoc (tadaima)
         run: nix develop --command bash -c "pnpm run tadaima:typedoc:build"
@@ -28,7 +28,7 @@ jobs:
       - name: Assemble Publish Directory
         run: |
           mkdir -p _site
-          cp -r docs _site
+          cp -r docs/ _site
           cp -r packages/tadaima/docs _site/tadaima
           cp -r packages/tadaima-cli/docs _site/tadaima-cli
       - name: Deploy to GitHub Pages
