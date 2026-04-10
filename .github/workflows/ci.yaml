@@ -25,4 +25,3 @@ jobs:
         run: nix develop --command bash -c "pnpm run fmt:check"
       - name: Test (Only tadaima-cli Test)
         run: nix develop --command bash -c "pnpm run tadaima-cli:test"
-
