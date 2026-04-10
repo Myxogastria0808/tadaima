@@ -18,7 +18,7 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
-      - name: Install dependencies
+      - name: Install Dependencies
         run: nix develop --command bash -c "pnpm install"
       - name: Build
         run: nix develop --command bash -c "pnpm run wiki:build"
@@ -29,3 +29,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'wiki'
+

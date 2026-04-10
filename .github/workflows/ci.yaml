@@ -17,11 +17,12 @@ jobs:
         uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
-      - name: Install dependencies
+      - name: Install Dependencies
         run: nix develop --command bash -c "pnpm install"
-      - name: Lint check
+      - name: Lint Check
         run: nix develop --command bash -c "pnpm run lint:check"
-      - name: Format check
+      - name: Format Check
         run: nix develop --command bash -c "pnpm run fmt:check"
-      - name: Test (only tadaima-cli test)
+      - name: Test (Only tadaima-cli Test)
         run: nix develop --command bash -c "pnpm run tadaima-cli:test"
+
