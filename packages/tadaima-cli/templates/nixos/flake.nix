@@ -40,18 +40,33 @@
     in
     {
       nixosModules.default =
-        { pkgs, lib, ... }:
+        { config, pkgs, lib, ... }:
+        let
+          cfg = config.services.{{projectName}};
+        in
         {
-          services.greetd = {
-            enable = true;
-            settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${
-              self.packages.${system}.default
-            }/bin/greeter";
+          options.services.{{projectName}} = {
+            enable = lib.mkEnableOption "{{projectName}} greetd greeter";
+
+            cachePath = lib.mkOption {
+              type = lib.types.str;
+              default = "/var/cache/tadaima";
+              description = "Directory for greeter state cache.";
+            };
           };
 
-          systemd.tmpfiles.rules = [
-            "d /var/cache/tadaima 0755 greeter greeter -"
-          ];
+          config = lib.mkIf cfg.enable {
+            services.greetd = {
+              enable = true;
+              settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${
+                self.packages.${system}.default
+              }/bin/greeter";
+            };
+
+            systemd.tmpfiles.rules = [
+              "d ${cfg.cachePath} 0755 greeter greeter -"
+            ];
+          };
         };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -111,6 +126,10 @@
       #
       # In your NixOS configuration:
       #   imports = [ inputs.{{projectName}}.nixosModules.default ];
+      #
+      #   services.{{projectName}} = {
+      #     enable = true;
+      #   };
     };
 }
 

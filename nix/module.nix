@@ -28,12 +28,6 @@ in
       description = "The bundled greeter binary package (built with `ags bundle`).";
     };
 
-    executableName = lib.mkOption {
-      type = lib.types.str;
-      default = "greeter";
-      description = "Name of the executable inside the package's bin/ directory.";
-    };
-
     cachePath = lib.mkOption {
       type = lib.types.str;
       default = "/var/cache/tadaima";
@@ -46,7 +40,7 @@ in
     # and sets default VT to 1. Neither `user` nor `vt` need to be specified.
     #
     # dbus-run-session: provides a D-Bus session bus required by GTK4 and
-    # Astal Greet's greetd IPC.
+    # tadaima's greetd IPC.
     #
     # cage: minimal Wayland kiosk compositor. Used instead of Hyprland because
     # greeter uses Gtk.ApplicationWindow (not Astal.Window which requires
@@ -54,7 +48,7 @@ in
     # Flags: -s (exit when last client closes), -d (allow startup without GPU backend)
     services.greetd = {
       enable = true;
-      settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${cfg.package}/bin/${cfg.executableName}";
+      settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${cfg.package}/bin/greeter";
     };
 
     # Cache directory owned by the greeter user for state persistence.
