@@ -31,9 +31,8 @@ usage() {
 }
 
 if [ -z "$TARGET" ]; then
-	error "No target specified."
 	usage
-	exit 1
+	exit 0
 fi
 
 case "$TARGET" in
