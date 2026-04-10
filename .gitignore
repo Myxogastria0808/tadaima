@@ -13,8 +13,7 @@ dist/
 .astro/
 
 # Typedoc
-docs/api/
-docs/cli-api/
+docs/
 
 # Vitest
 html/

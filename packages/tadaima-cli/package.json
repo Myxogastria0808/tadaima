@@ -28,7 +28,7 @@
     "test:ui": "vitest --ui --typecheck",
     "test:coverage": "vitest run --coverage --typecheck",
     "typedoc:build": "typedoc",
-    "typedoc:preview": "browser-sync start --server ../../docs/cli-api --no-open"
+    "typedoc:preview": "browser-sync start --server docs --no-open"
   },
   "dependencies": {
     "@clack/prompts": "catalog:cli",

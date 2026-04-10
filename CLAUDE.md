@@ -61,7 +61,7 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 
 - **`packages/tadaima/`** — The npm library (`tadaima`). Source is in `packages/tadaima/src/`.
 - **`examples/`** — Three example greeters (simple, image, movie). Each depends on `tadaima: workspace:*`.
-- **`docs/wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
+- **`wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
 - **`nix/module.nix`** — NixOS service module (`services.tadaima`).
 - **`@girs/`** — GObject Introspection type definitions (generated, not hand-written).
 

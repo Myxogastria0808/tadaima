@@ -30,7 +30,7 @@
     "pub": "pnpm publish --access=public",
     "unpub": "pnpm unpublish tadaima@${npm_config_v}",
     "typedoc:build": "typedoc",
-    "typedoc:preview": "browser-sync start --server ../docs/api --no-open"
+    "typedoc:preview": "browser-sync start --server docs --no-open"
   },
   "devDependencies": {
     "browser-sync": "catalog:typedoc",
