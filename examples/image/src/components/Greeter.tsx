@@ -1,5 +1,6 @@
 // Image wallpaper greeter example using tadaima.
-// Uses Gtk.ApplicationWindow (not Astal.Window) for cage compatibility.
+// Expects a PNG wallpaper at /var/cache/tadaima/wallpaper.png.
+// Use `wallpaper add -g <image>` to set it.
 
 import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
@@ -7,7 +8,7 @@ import Gio from 'gi://Gio';
 import style from './style.scss';
 import { createGreeter } from 'tadaima';
 
-const WALLPAPER_PATH = '/run/current-system/sw/share/backgrounds/nixos/nix-wallpaper-nineish-solarized-dark.png';
+const WALLPAPER_PATH = '/var/cache/tadaima/wallpaper.png';
 
 const Greeter = (): void => {
   app.apply_css(style);
@@ -42,10 +43,6 @@ const Greeter = (): void => {
     },
   });
 
-  // Wallpaper uses Gtk.Picture + Gtk.Overlay because GTK4 CSS
-  // background-image: url() does not work with absolute file paths
-  // when loaded via load_from_string (app.apply_css).
-  // See: https://gitlab.gnome.org/GNOME/gtk/-/issues/5648
   const win = (
     <Gtk.ApplicationWindow application={app} name="greeter">
       <Gtk.Overlay>
@@ -62,7 +59,7 @@ const Greeter = (): void => {
           halign={Gtk.Align.CENTER}
           cssClasses={['login-box']}
         >
-          <Gtk.Label label="Welcome to NixOS" cssClasses={['greeting']} />
+          <Gtk.Label label="Login" cssClasses={['greeting']} />
           <Gtk.Entry
             text={cache.username}
             placeholderText="Username"
@@ -78,7 +75,6 @@ const Greeter = (): void => {
           <Gtk.DropDown
             $constructor={() => Gtk.DropDown.new_from_strings(sessionNames)}
             selected={cache.sessionIndex}
-            cssClasses={['session-dropdown']}
             $={(self) => (sessionDropdown = self)}
           />
           <Gtk.Label label="" visible={false} cssClasses={['error']} $={(self) => (errorLabel = self)} />

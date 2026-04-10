@@ -19,7 +19,7 @@ direnv allow   # or: nix develop
 Install dependencies and generate type definitions:
 
 ```sh
-pnpm run setup   # runs pnpm install + scripts/types.sh
+pnpm run setup   # runs pnpm install + ags types + wiki build
 ```
 
 ## Common Commands
@@ -30,22 +30,43 @@ pnpm run setup   # runs pnpm install + scripts/types.sh
 nix build .#simple
 nix build .#image
 nix build .#movie
+pnpm run nix:build          # Show usage
+pnpm run nix:build:simple   # Build simple greeter
+```
+
+### Formatting and Linting
+
+```sh
+pnpm run fmt                # Format (oxfmt + prettier for .astro)
+pnpm run fmt:check          # Check formatting (CI)
+pnpm run lint               # Lint with auto-fix (oxlint + eslint)
+pnpm run lint:check         # Check lint (CI)
 ```
 
 ### Documentation
 
 ```sh
-pnpm run typedoc:build      # Generate API docs (TypeDoc)
-pnpm run typedoc:preview    # Preview API docs locally
-pnpm run wiki:dev           # Astro dev server for wiki
-pnpm run wiki:build         # Build wiki for deployment
+pnpm run tadaima:typedoc:build       # Generate tadaima API docs
+pnpm run tadaima:typedoc:preview     # Preview tadaima API docs
+pnpm run tadaima-cli:typedoc:build   # Generate tadaima-cli API docs
+pnpm run tadaima-cli:typedoc:preview # Preview tadaima-cli API docs
+pnpm run wiki:dev                    # Astro dev server for wiki
+pnpm run wiki:build                  # Build wiki for deployment
+```
+
+### tadaima-cli
+
+```sh
+pnpm run tadaima-cli:dev     # Build + run CLI (in tmp/)
+pnpm run tadaima-cli:build   # Build with tsup
+pnpm run tadaima-cli:test    # Run integration tests (vitest + execa)
 ```
 
 ### Package publishing
 
 ```sh
-pnpm run tadaima:pub        # Publish tadaima to npm
-pnpm run tadaima-cli:pub    # Publish tadaima-cli to npm
+pnpm run tadaima:pub         # Publish tadaima to npm
+pnpm run tadaima-cli:pub     # Publish tadaima-cli to npm
 ```
 
 ## Architecture
@@ -61,7 +82,8 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 ### Monorepo structure (pnpm workspaces)
 
 - **`packages/tadaima/`** — The npm library (`tadaima`). Source is in `packages/tadaima/src/`.
-- **`examples/`** — Three example greeters (simple, image, movie). Each depends on `tadaima: workspace:*`.
+- **`packages/tadaima-cli/`** — CLI scaffolding tool (`npx create-tadaima`). Built with `@clack/prompts` and `tsup`.
+- **`examples/`** — Three example greeters (simple, image, movie). Each has `src/app.tsx`, `src/components/Greeter.tsx`, and `src/components/style.scss`.
 - **`wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
 - **`nix/module.nix`** — NixOS service module (`services.tadaima`).
 - **`@girs/`** — GObject Introspection type definitions (generated, not hand-written).
@@ -75,13 +97,37 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 
 Public API is re-exported from `packages/tadaima/src/index.ts`.
 
+### tadaima-cli structure (`packages/tadaima-cli/`)
+
+- **`src/cli.ts`** — Entry point (args → prompts → generate → outro).
+- **`src/lib/args.ts`** — CLI argument parsing with `node:util` `parseArgs`.
+- **`src/lib/prompts.ts`** — Interactive prompts with `@clack/prompts`.
+- **`src/lib/generator.ts`** — Template copy + `{{projectName}}` placeholder substitution.
+- **`src/lib/validate.ts`** — Project name and platform validation.
+- **`src/lib/types.ts`** — `PlatformType` (`arch` | `nixos` | `nix`).
+- **`src/index.ts`** — Re-exports for TypeDoc.
+- **`templates/`** — Project templates (common + platform-specific).
+- **`__tests__/cli.test.ts`** — Integration tests (execa subprocess, create-vite style).
+
 ## TypeScript Configuration
+
+### tadaima (library)
 
 - JSX: `react-jsx` with `jsxImportSource: "ags/gtk4"` (Gnim JSX for GTK4)
 - Module: ES2022, moduleResolution: Bundler
 - Strict mode enabled
 - Target: ES2020
 
-## Formatting
+### tadaima-cli
 
-Prettier with: printWidth 120, tabWidth 2, single quotes, trailing commas (es5), semicolons.
+- Module: ES2022, moduleResolution: Bundler
+- Target: ES2022
+- Built with tsup (esbuild), shebang injected via `banner`
+- No JSX
+
+## Formatting and Linting
+
+- **oxfmt** — TS/JS/JSON formatting (`.astro` excluded via CLI flag)
+- **oxlint** — TS/JS linting (`.astro` excluded via CLI flag, GJS globals in `.oxlintrc.json`)
+- **prettier** + `prettier-plugin-astro` — `.astro` file formatting only
+- **eslint** + `eslint-plugin-astro` — `.astro` file linting only
