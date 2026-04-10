@@ -15,10 +15,6 @@ dist/
 # Typedoc
 docs/
 
-# Vitest
-html/
-coverage/
-
 # Logs
 npm-debug.log*
 yarn-debug.log*

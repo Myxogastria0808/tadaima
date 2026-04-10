@@ -25,25 +25,13 @@ jobs:
         run: nix develop --command bash -c "pnpm run tadaima:typedoc:build"
       - name: Build Typedoc (tadaima-cli)
         run: nix develop --command bash -c "pnpm run tadaima-cli:typedoc:build"
-      - name: Build Vitest UI (@vitest/ui for tadaima-cli)
-        id: vitest
-        continue-on-error: true
-        run: nix develop --command bash -c "pnpm run tadaima-cli:test:ui"
-      - name: Build Vitest Coverage (@vitest/coverage-v8 for tadaima-cli)
-        continue-on-error: true
-        run: nix develop --command bash -c "pnpm run tadaima-cli:test:coverage"
       - name: Assemble Publish Directory
         run: |
           mkdir -p _site
-          cp -r packages/tadaima/docs _site/tadaima/typedoc
-          cp -r packages/tadaima-cli/docs _site/tadaima-cli/typedoc
-          cp -r packages/tadaima-cli/html _site/tadaima-cli/test/ui || true
-          cp -r packages/tadaima-cli/coverage _site/tadaima-cli/test/coverage || true
+          cp -r packages/tadaima/docs _site/tadaima
+          cp -r packages/tadaima-cli/docs _site/tadaima-cli
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-      - name: If Failed Test, exit 1
-        if: steps.vitest.outcome == 'failure'
-        run: exit 1

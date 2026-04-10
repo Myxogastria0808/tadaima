@@ -25,10 +25,6 @@
     "build": "tsup",
     "start": "node dist/cli.js",
     "test": "vitest run --typecheck",
-    "test:ui": "vitest run --ui --typecheck",
-    "test:ui:preview": "browser-sync start --server html --no-open",
-    "test:coverage": "vitest run --coverage --typecheck",
-    "test:coverage:preview": "browser-sync start --server coverage --no-open",
     "typedoc:build": "typedoc",
     "typedoc:preview": "browser-sync start --server docs --no-open"
   },
@@ -39,9 +35,8 @@
   "devDependencies": {
     "@types/node": "catalog:cli",
     "@types/validate-npm-package-name": "catalog:cli",
-    "@vitest/coverage-v8": "catalog:cli",
-    "@vitest/ui": "catalog:cli",
     "browser-sync": "catalog:typedoc",
+    "execa": "catalog:cli",
     "tsup": "catalog:cli",
     "typedoc": "catalog:typedoc",
     "vitest": "catalog:cli"
