@@ -1,15 +1,33 @@
 packages:
-  - package
+  - packages/*
   - examples/*
-  - docs/wiki
+  - wiki
+
+catalog:
+  oxfmt: ^0.44.0
+  oxlint: ^1.59.0
 
 catalogs:
+  cli:
+    '@clack/prompts': ^1.2.0
+    '@types/node': ^25.6.0
+    '@types/validate-npm-package-name': ^4.0.2
+    execa: ^9.6.1
+    tsup: ^8.5.1
+    validate-npm-package-name: ^7.0.2
+    vitest: ^4.1.4
+
   typedoc:
     browser-sync: ^3.0.4
     typedoc: ^0.28.18
   wiki:
     '@astrojs/starlight': ^0.38.3
+    '@typescript-eslint/parser': ^8.58.1
     astro: ^6.0.1
+    eslint: ^10.2.0
+    eslint-plugin-astro: ^1.7.0
+    prettier: ^3.8.1
+    prettier-plugin-astro: ^0.14.1
     sharp: ^0.34.2
     wrangler: ^4.81.0
 

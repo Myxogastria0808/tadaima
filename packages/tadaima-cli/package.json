@@ -1,0 +1,47 @@
+{
+  "name": "tadaima-cli",
+  "version": "0.0.1",
+  "description": "Scaffold a tadaima greeter project",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Myxogastria0808/tadaima",
+    "directory": "packages/tadaima-cli"
+  },
+  "bin": {
+    "create-tadaima": "./dist/cli.js"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "templates/"
+  ],
+  "type": "module",
+  "scripts": {
+    "pub": "pnpm publish --access=public",
+    "unpub": "pnpm unpublish tadaima-cli@${npm_config_v}",
+    "dev": "tsup && cd ../../ && mkdir -p tmp && cd tmp && node ../packages/tadaima-cli/dist/cli.js",
+    "build": "tsup",
+    "start": "node dist/cli.js",
+    "test": "vitest run --typecheck",
+    "typedoc:build": "typedoc",
+    "typedoc:preview": "browser-sync start --server docs --no-open"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:cli",
+    "validate-npm-package-name": "catalog:cli"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:cli",
+    "@types/validate-npm-package-name": "catalog:cli",
+    "browser-sync": "catalog:typedoc",
+    "execa": "catalog:cli",
+    "tsup": "catalog:cli",
+    "typedoc": "catalog:typedoc",
+    "vitest": "catalog:cli"
+  },
+  "engines": {
+    "node": "^20.17.0 || >=22.9.0"
+  }
+}

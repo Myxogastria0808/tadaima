@@ -6,7 +6,7 @@ permissions:
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ['main']
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
@@ -16,15 +16,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      # Install Nix
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
-      # Build
+      - name: Install dependencies
+        run: nix develop --command bash -c "pnpm install"
       - name: Build
         id: build
-        run: nix develop --command bash -c "pnpm i && pnpm run wiki:build"
+        run: nix develop --command bash -c "pnpm run wiki:build"
       # Deploy Preview to Cloudflare Workers
       # Ref: https://zenn.dev/lalalatotoro/articles/b8fa632b53d332
       # Ref: https://zenn.dev/nikomaru/articles/0cea1b1e2fd4f2
@@ -34,10 +34,10 @@ jobs:
         continue-on-error: true
         uses: cloudflare/wrangler-action@v3
         with:
-          wranglerVersion: "4.81.0"
+          wranglerVersion: '4.81.0'
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: "docs/wiki"
+          workingDirectory: 'wiki'
           command: |
             versions upload --message "Deployed a Preview by GitHub Actions: branch ${{ github.ref_name }}"
       - name: Create Preview Summary File (Success Pattern)
@@ -109,4 +109,3 @@ jobs:
         run: |
           echo "Deploy failed"
           exit 1
-

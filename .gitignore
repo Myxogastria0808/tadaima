@@ -6,16 +6,14 @@
 *.txt
 /.claude
 
-# JavaScript / GJS
+# JavaScript / GJS / Astro
 node_modules/
 @girs/
-
-# Astro
-.astro/
 dist/
+.astro/
 
 # Typedoc
-docs/api/
+docs/
 
 # Logs
 npm-debug.log*
@@ -29,4 +27,7 @@ pnpm-debug.log*
 
 # MacOS-specific Files
 .DS_Store
+
+# tadaima
+tmp/
 

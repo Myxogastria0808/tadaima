@@ -1,0 +1,39 @@
+{
+  "name": "tadaima",
+  "version": "0.0.1",
+  "description": "A greetd greeter library for AGS/GJS",
+  "keywords": [
+    "ags",
+    "gjs",
+    "greetd",
+    "greeter",
+    "gtk4",
+    "login",
+    "wayland"
+  ],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Myxogastria0808/tadaima"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "src/"
+  ],
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "pub": "pnpm publish --access=public",
+    "unpub": "pnpm unpublish tadaima@${npm_config_v}",
+    "typedoc:build": "typedoc",
+    "typedoc:preview": "browser-sync start --server docs --no-open"
+  },
+  "devDependencies": {
+    "browser-sync": "catalog:typedoc",
+    "typedoc": "catalog:typedoc"
+  }
+}

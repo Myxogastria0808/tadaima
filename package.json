@@ -2,21 +2,37 @@
   "name": "tadaima-workspace",
   "private": true,
   "scripts": {
-    "setup": "pnpm install && sh scripts/types.sh && pnpm run wiki:build",
-    "types": "sh scripts/types.sh",
-    "package:pub": "pnpm -C package pub",
-    "package:unpub": "pnpm -C package unpub",
-    "typedoc:build": "pnpm -C package typedoc:build",
-    "typedoc:preview": "pnpm -C package typedoc:preview",
-    "wiki:dev": "pnpm -C docs/wiki dev",
-    "wiki:start": "pnpm -C docs/wiki start",
-    "wiki:build": "pnpm -C docs/wiki build",
-    "wiki:preview": "pnpm -C docs/wiki preview",
-    "wiki:astro": "pnpm -C docs/wiki astro",
+    "setup": "pnpm install && pnpm run ags:types && pnpm run wiki:build",
+    "fmt": "oxfmt --write '!**/*.astro' . && pnpm -C wiki exec prettier --write '**/*.astro'",
+    "fmt:check": "oxfmt --check '!**/*.astro' . && pnpm -C wiki exec prettier --check '**/*.astro'",
+    "lint": "oxlint --fix --ignore-pattern '**/*.astro' . && pnpm -C wiki exec eslint --fix .",
+    "lint:check": "oxlint --ignore-pattern '**/*.astro' . && pnpm -C wiki exec eslint .",
+    "tadaima:pub": "pnpm -C packages/tadaima pub",
+    "tadaima:unpub": "pnpm -C packages/tadaima unpub",
+    "tadaima:typedoc:build": "pnpm -C packages/tadaima typedoc:build",
+    "tadaima:typedoc:preview": "pnpm -C packages/tadaima typedoc:preview",
+    "tadaima-cli:pub": "pnpm -C packages/tadaima-cli pub",
+    "tadaima-cli:unpub": "pnpm -C packages/tadaima-cli unpub",
+    "tadaima-cli:typedoc:build": "pnpm -C packages/tadaima-cli typedoc:build",
+    "tadaima-cli:typedoc:preview": "pnpm -C packages/tadaima-cli typedoc:preview",
+    "tadaima-cli:dev": "pnpm -C packages/tadaima-cli dev",
+    "tadaima-cli:build": "pnpm -C packages/tadaima-cli build",
+    "tadaima-cli:start": "pnpm -C packages/tadaima-cli start",
+    "tadaima-cli:test": "pnpm -C packages/tadaima-cli test",
+    "wiki:dev": "pnpm -C wiki dev",
+    "wiki:start": "pnpm -C wiki start",
+    "wiki:build": "pnpm -C wiki build",
+    "wiki:preview": "pnpm -C wiki preview",
+    "wiki:astro": "pnpm -C wiki astro",
+    "ags:types": "sh scripts/types.sh",
     "nix:build:simple": "sh scripts/build.sh simple",
     "nix:build:image": "sh scripts/build.sh image",
-    "nix:build:movie": "sh scripts/build.sh movie"
+    "nix:build:movie": "sh scripts/build.sh movie",
+    "nix:build": "sh scripts/build.sh"
   },
-  "packageManager": "pnpm@10.18.0"
+  "devDependencies": {
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
-
