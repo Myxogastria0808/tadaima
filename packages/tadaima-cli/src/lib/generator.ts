@@ -1,7 +1,21 @@
+/**
+ * Template generation logic.
+ * Copies common and platform-specific template files to the target directory,
+ * replacing `{{projectName}}` placeholders.
+ * @module generator
+ */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { ProjectConfigType } from './prompts';
+import { isCurrentWorkingDirectory } from './validate';
 
+/**
+ * Recursively copies a directory, replacing `{{projectName}}` in file contents.
+ *
+ * @param src - Source directory path
+ * @param target - Target directory path
+ * @param projectName - Project name to substitute into templates
+ */
 const copyDir = async (src: string, target: string, projectName: string): Promise<void> => {
   // Read the contents of the src directory, including file types
   const entries = await fs.readdir(src, { withFileTypes: true });
@@ -26,10 +40,21 @@ const copyDir = async (src: string, target: string, projectName: string): Promis
   }
 };
 
+/**
+ * Generates a tadaima greeter project from templates.
+ * Copies common files and platform-specific files to the target directory.
+ * When a cwd indicator (`.`, `./`, `./.`) is given as project name,
+ * the directory basename is used for `{{projectName}}` substitution.
+ *
+ * @param config - Project configuration (project name and platform)
+ * @returns Absolute path to the generated project directory
+ * @throws If the target directory is not empty or an unknown error occurs
+ */
 export const generateTemplate = async (config: ProjectConfigType): Promise<string> => {
   const templatesDir = path.resolve(import.meta.dirname, '..', 'templates');
-  // Define the absolute path to the target directory based on the current working directory and the project name
   const targetDir = path.resolve(process.cwd(), config.projectName);
+  // Use directory basename as project name when cwd is specified (e.g. ".")
+  const projectName = isCurrentWorkingDirectory(config.projectName) ? path.basename(targetDir) : config.projectName;
 
   // Check if target directory already exists and is non-empty
   try {
@@ -53,9 +78,9 @@ export const generateTemplate = async (config: ProjectConfigType): Promise<strin
   await fs.mkdir(targetDir, { recursive: true });
 
   // Copy common files
-  await copyDir(path.join(templatesDir, 'common'), targetDir, config.projectName);
+  await copyDir(path.join(templatesDir, 'common'), targetDir, projectName);
   // Copy platform-specific files
-  await copyDir(path.join(templatesDir, config.platform), targetDir, config.projectName);
+  await copyDir(path.join(templatesDir, config.platform), targetDir, projectName);
 
   return targetDir;
 };

@@ -28,7 +28,7 @@
     "test:ui": "vitest --ui --typecheck",
     "test:coverage": "vitest run --coverage --typecheck",
     "typedoc:build": "typedoc",
-    "typedoc:preview": "browser-sync start --server ../../docs/api-cli --no-open"
+    "typedoc:preview": "browser-sync start --server ../../docs/cli-api --no-open"
   },
   "dependencies": {
     "@clack/prompts": "catalog:cli",
@@ -39,8 +39,8 @@
     "@types/validate-npm-package-name": "catalog:cli",
     "@vitest/coverage-v8": "catalog:cli",
     "@vitest/ui": "catalog:cli",
-    "tsup": "catalog:cli",
     "browser-sync": "catalog:typedoc",
+    "tsup": "catalog:cli",
     "typedoc": "catalog:typedoc",
     "vitest": "catalog:cli"
   },

@@ -36,7 +36,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -r docs/api _site/tadaima/typedoc
-          cp -r docs/api-cli _site/tadaima-cli/typedoc
+          cp -r docs/cli-api _site/tadaima-cli/typedoc
           cp -r packages/tadaima-cli/html _site/tadaima-cli/test/ui || true
           cp -r packages/tadaima-cli/coverage _site/tadaima-cli/test/coverage || true
       - name: Deploy to GitHub Pages

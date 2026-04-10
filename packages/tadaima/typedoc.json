@@ -4,3 +4,4 @@
   "out": "../docs/api",
   "tsconfig": "tsconfig.typedoc.json"
 }
+

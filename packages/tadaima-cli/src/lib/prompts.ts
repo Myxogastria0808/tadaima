@@ -1,13 +1,25 @@
+/**
+ * Interactive prompts for collecting project configuration.
+ * @module prompts
+ */
 import { text, select, cancel, group } from '@clack/prompts';
 import type { PlatformType } from './types';
 import type { ArgsType } from './args';
 import { isValidProjectName } from './validate';
 
+/** Configuration collected from CLI arguments and/or interactive prompts. */
 export type ProjectConfigType = {
   projectName: string;
   platform: PlatformType;
 };
 
+/**
+ * Prompts the user for any missing configuration.
+ * Skips prompts for values already provided via CLI arguments.
+ *
+ * @param args - Pre-parsed CLI arguments
+ * @returns Complete project configuration
+ */
 export const getPrompts = async (args: ArgsType): Promise<ProjectConfigType> => {
   const project = await group(
     {

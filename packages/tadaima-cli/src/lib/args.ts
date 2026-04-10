@@ -1,7 +1,12 @@
+/**
+ * CLI argument parsing and validation.
+ * @module args
+ */
 import { parseArgs } from 'node:util';
 import type { PlatformType } from './types';
 import { isValidProjectName, isValidPlatform } from './validate';
 
+/** Parsed and validated CLI arguments. */
 export type ArgsType = {
   projectName?: string;
   platform?: PlatformType;
@@ -21,6 +26,12 @@ Examples:
   create-tadaima .
 `;
 
+/**
+ * Parses and validates CLI arguments.
+ * Exits the process on `--help`/`-h` or invalid input.
+ *
+ * @returns Parsed arguments with optional `projectName` and `platform`
+ */
 export const getArgs = (): ArgsType => {
   // Parse command-line arguments
   const { values, positionals } = parseArgs({
