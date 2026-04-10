@@ -76,18 +76,24 @@
 
       # Manual greetd setup:
       #
-      # 1. Build and install:
+      # 1. Build the greeter:
       #   nix build
-      #   sudo cp ./result/bin/greeter /usr/local/bin/greeter
       #
-      # 2. Configure /etc/greetd/config.toml:
+      # 2. Find the Nix store path of the built greeter:
+      #   readlink ./result
+      #   # Example output: /nix/store/abc123...-{{projectName}}
+      #
+      # 3. Pin the build result so `nix-collect-garbage` does not remove it:
+      #   sudo nix build --out-link /etc/greetd/greeter-link
+      #
+      # 4. Configure /etc/greetd/config.toml with the store path from step 2:
       #   [terminal]
       #   vt = 1
       #   [default_session]
-      #   command = "dbus-run-session cage -s -d -- /usr/local/bin/greeter"
+      #   command = "dbus-run-session cage -s -d -- /nix/store/abc123...-{{projectName}}/bin/greeter"
       #   user = "greeter"
       #
-      # 3. Create cache directory and enable greetd:
+      # 5. Create cache directory and enable greetd:
       #   sudo mkdir -p /var/cache/tadaima
       #   sudo chown greeter:greeter /var/cache/tadaima
       #   sudo systemctl enable greetd.service

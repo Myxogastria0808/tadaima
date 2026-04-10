@@ -14,6 +14,7 @@ dist/
 
 # Typedoc
 docs/
+!/docs
 
 # Logs
 npm-debug.log*
