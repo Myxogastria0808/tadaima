@@ -19,9 +19,10 @@ jobs:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       - name: Install dependencies
         run: nix develop --command bash -c "pnpm install"
-      - name: Lint
-        run: nix develop --command bash -c "pnpm run lint"
+      - name: Lint check
+        run: nix develop --command bash -c "pnpm run lint:check"
       - name: Format check
         run: nix develop --command bash -c "pnpm run fmt:check"
       - name: Test (only tadaima-cli test)
         run: nix develop --command bash -c "pnpm run tadaima-cli:test"
+

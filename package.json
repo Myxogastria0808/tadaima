@@ -5,7 +5,8 @@
     "setup": "pnpm install && pnpm run ags:types && pnpm run wiki:build",
     "fmt": "oxfmt --write '!**/*.astro' . && pnpm -C wiki exec prettier --write '**/*.astro'",
     "fmt:check": "oxfmt --check '!**/*.astro' . && pnpm -C wiki exec prettier --check '**/*.astro'",
-    "lint": "oxlint --ignore-pattern '**/*.astro' . && pnpm -C wiki exec eslint .",
+    "lint": "oxlint --fix --ignore-pattern '**/*.astro' . && pnpm -C wiki exec eslint --fix .",
+    "lint:check": "oxlint --ignore-pattern '**/*.astro' . && pnpm -C wiki exec eslint .",
     "tadaima:pub": "pnpm -C packages/tadaima pub",
     "tadaima:unpub": "pnpm -C packages/tadaima unpub",
     "tadaima:typedoc:build": "pnpm -C packages/tadaima typedoc:build",
@@ -19,7 +20,9 @@
     "tadaima-cli:start": "pnpm -C packages/tadaima-cli start",
     "tadaima-cli:test": "pnpm -C packages/tadaima-cli test",
     "tadaima-cli:test:ui": "pnpm -C packages/tadaima-cli test:ui",
+    "tadaima-cli:test:ui:preview": "pnpm -C packages/tadaima-cli test:ui:preview",
     "tadaima-cli:test:coverage": "pnpm -C packages/tadaima-cli test:coverage",
+    "tadaima-cli:test:coverage:preview": "pnpm -C packages/tadaima-cli test:coverage:preview",
     "wiki:dev": "pnpm -C wiki dev",
     "wiki:start": "pnpm -C wiki start",
     "wiki:build": "pnpm -C wiki build",
@@ -37,3 +40,4 @@
   },
   "packageManager": "pnpm@10.33.0"
 }
+
