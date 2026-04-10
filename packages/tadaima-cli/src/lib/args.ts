@@ -78,4 +78,3 @@ export const getArgs = (): ArgsType => {
     platform: platform as PlatformType | undefined,
   };
 };
-

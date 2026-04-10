@@ -10,4 +10,3 @@ export { getPrompts } from './lib/prompts';
 export type { ProjectConfigType } from './lib/prompts';
 export type { PlatformType } from './lib/types';
 export { isCurrentWorkingDirectory, isValidProjectName, isValidPlatform } from './lib/validate';
-

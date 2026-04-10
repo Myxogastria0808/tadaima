@@ -36,4 +36,3 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
-

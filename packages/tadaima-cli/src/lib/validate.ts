@@ -43,4 +43,3 @@ export const isValidProjectName = (value: string): true | string => {
 export const isValidPlatform = (value: string): boolean => {
   return ['arch', 'nixos', 'nix'].includes(value);
 };
-

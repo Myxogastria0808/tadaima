@@ -84,4 +84,3 @@ export const generateTemplate = async (config: ProjectConfigType): Promise<strin
 
   return targetDir;
 };
-

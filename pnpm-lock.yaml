@@ -84,37 +84,6 @@ importers:
         specifier: 'catalog:'
         version: 1.59.0
 
-  docs/wiki:
-    dependencies:
-      '@astrojs/starlight':
-        specifier: catalog:wiki
-        version: 0.38.3(astro@6.1.5(@types/node@25.6.0)(rollup@4.60.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))
-      astro:
-        specifier: catalog:wiki
-        version: 6.1.5(@types/node@25.6.0)(rollup@4.60.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)
-      sharp:
-        specifier: catalog:wiki
-        version: 0.34.5
-    devDependencies:
-      '@typescript-eslint/parser':
-        specifier: catalog:wiki
-        version: 8.58.1(eslint@10.2.0)(typescript@6.0.2)
-      eslint:
-        specifier: catalog:wiki
-        version: 10.2.0
-      eslint-plugin-astro:
-        specifier: catalog:wiki
-        version: 1.7.0(eslint@10.2.0)
-      prettier:
-        specifier: catalog:wiki
-        version: 3.8.1
-      prettier-plugin-astro:
-        specifier: catalog:wiki
-        version: 0.14.1
-      wrangler:
-        specifier: catalog:wiki
-        version: 4.81.0
-
   examples/image:
     dependencies:
       tadaima:
@@ -175,6 +144,37 @@ importers:
       vitest:
         specifier: catalog:cli
         version: 4.1.4(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(@vitest/ui@4.1.4)(vite@7.3.2(@types/node@25.6.0)(tsx@4.21.0)(yaml@2.8.3))
+
+  wiki:
+    dependencies:
+      '@astrojs/starlight':
+        specifier: catalog:wiki
+        version: 0.38.3(astro@6.1.5(@types/node@25.6.0)(rollup@4.60.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))
+      astro:
+        specifier: catalog:wiki
+        version: 6.1.5(@types/node@25.6.0)(rollup@4.60.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)
+      sharp:
+        specifier: catalog:wiki
+        version: 0.34.5
+    devDependencies:
+      '@typescript-eslint/parser':
+        specifier: catalog:wiki
+        version: 8.58.1(eslint@10.2.0)(typescript@6.0.2)
+      eslint:
+        specifier: catalog:wiki
+        version: 10.2.0
+      eslint-plugin-astro:
+        specifier: catalog:wiki
+        version: 1.7.0(eslint@10.2.0)
+      prettier:
+        specifier: catalog:wiki
+        version: 3.8.1
+      prettier-plugin-astro:
+        specifier: catalog:wiki
+        version: 0.14.1
+      wrangler:
+        specifier: catalog:wiki
+        version: 4.81.0
 
 packages:
 
@@ -4680,7 +4680,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 25.6.0
 
   '@types/unist@2.0.11': {}
 

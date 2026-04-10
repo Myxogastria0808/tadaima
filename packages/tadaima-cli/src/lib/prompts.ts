@@ -65,4 +65,3 @@ export const getPrompts = async (args: ArgsType): Promise<ProjectConfigType> => 
 
   return project satisfies ProjectConfigType;
 };
-

@@ -6,4 +6,3 @@
  * - `nix` — Nix on non-NixOS distros (Nix flake, manual greetd setup, npm for tadaima)
  */
 export type PlatformType = 'arch' | 'nixos' | 'nix';
-
