@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeAll, afterEach } from 'vitest';
+import { describe, test, expect, beforeAll } from 'vitest';
 import { execaCommandSync } from 'execa';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -14,192 +14,175 @@ const run = (args: string[], cwd: string) => {
   return execaCommandSync(`node ${CLI_PATH} ${args.join(' ')}`, { cwd });
 };
 
-let tmpDirs: string[] = [];
-
-afterEach(() => {
-  for (const dir of tmpDirs) {
-    fs.rmSync(dir, { recursive: true, force: true });
+const withTmpDir = (fn: (tmpDir: string) => void) => {
+  const tmpDir = createTmpDir();
+  try {
+    fn(tmpDir);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   }
-  tmpDirs = [];
-});
+};
 
 beforeAll(() => {
-  // Ensure CLI is built before running tests
   execaCommandSync('pnpm run build', {
     cwd: path.resolve(import.meta.dirname, '..'),
   });
 });
 
 describe('cli', () => {
-  test('--help shows usage and exits with 0', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
-
-    const result = run(['--help'], tmpDir);
-    expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain('Usage: create-tadaima');
+  test.concurrent('--help shows usage and exits with 0', () => {
+    withTmpDir((tmpDir) => {
+      const result = run(['--help'], tmpDir);
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('Usage: create-tadaima');
+    });
   });
 
-  test('-h shows usage and exits with 0', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
-
-    const result = run(['-h'], tmpDir);
-    expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain('Usage: create-tadaima');
+  test.concurrent('-h shows usage and exits with 0', () => {
+    withTmpDir((tmpDir) => {
+      const result = run(['-h'], tmpDir);
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('Usage: create-tadaima');
+    });
   });
 
-  test('generates arch project with correct files', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('generates arch project with correct files', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'arch'], tmpDir);
 
-    run(['test-greeter', '-p', 'arch'], tmpDir);
-
-    const projectDir = path.join(tmpDir, 'test-greeter');
-    expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, '.gitignore'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'src', 'app.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'src', 'global.css'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'Greeter.tsx'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'style.scss'))).toBe(true);
+      const projectDir = path.join(tmpDir, 'test-greeter');
+      expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, '.gitignore'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'src', 'app.tsx'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'src', 'global.css'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'Greeter.tsx'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'style.scss'))).toBe(true);
+    });
   });
 
-  test('generates nixos project with flake.nix and .envrc', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('generates nixos project with flake.nix and .envrc', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'nixos'], tmpDir);
 
-    run(['test-greeter', '-p', 'nixos'], tmpDir);
-
-    const projectDir = path.join(tmpDir, 'test-greeter');
-    expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'Greeter.tsx'))).toBe(true);
+      const projectDir = path.join(tmpDir, 'test-greeter');
+      expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'src', 'components', 'Greeter.tsx'))).toBe(true);
+    });
   });
 
-  test('generates nix project with flake.nix and .envrc', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('generates nix project with flake.nix and .envrc', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'nix'], tmpDir);
 
-    run(['test-greeter', '-p', 'nix'], tmpDir);
-
-    const projectDir = path.join(tmpDir, 'test-greeter');
-    expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(true);
-    expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+      const projectDir = path.join(tmpDir, 'test-greeter');
+      expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+    });
   });
 
-  test('arch project does not include flake.nix or .envrc', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('arch project does not include flake.nix or .envrc', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'arch'], tmpDir);
 
-    run(['test-greeter', '-p', 'arch'], tmpDir);
-
-    const projectDir = path.join(tmpDir, 'test-greeter');
-    expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(false);
-    expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(false);
+      const projectDir = path.join(tmpDir, 'test-greeter');
+      expect(fs.existsSync(path.join(projectDir, 'flake.nix'))).toBe(false);
+      expect(fs.existsSync(path.join(projectDir, '.envrc'))).toBe(false);
+    });
   });
 
-  test('replaces {{projectName}} in package.json', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('replaces {{projectName}} in package.json', () => {
+    withTmpDir((tmpDir) => {
+      run(['my-greeter', '-p', 'arch'], tmpDir);
 
-    run(['my-greeter', '-p', 'arch'], tmpDir);
-
-    const pkgPath = path.join(tmpDir, 'my-greeter', 'package.json');
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-    expect(pkg.name).toBe('my-greeter');
+      const pkgPath = path.join(tmpDir, 'my-greeter', 'package.json');
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      expect(pkg.name).toBe('my-greeter');
+    });
   });
 
-  test('replaces {{projectName}} in flake.nix', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('replaces {{projectName}} in flake.nix', () => {
+    withTmpDir((tmpDir) => {
+      run(['my-greeter', '-p', 'nixos'], tmpDir);
 
-    run(['my-greeter', '-p', 'nixos'], tmpDir);
-
-    const content = fs.readFileSync(path.join(tmpDir, 'my-greeter', 'flake.nix'), 'utf-8');
-    expect(content).toContain('my-greeter');
-    expect(content).not.toContain('{{projectName}}');
+      const content = fs.readFileSync(path.join(tmpDir, 'my-greeter', 'flake.nix'), 'utf-8');
+      expect(content).toContain('my-greeter');
+      expect(content).not.toContain('{{projectName}}');
+    });
   });
 
-  test('nixos Greeter.tsx uses /run/current-system/sw paths', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('nixos Greeter.tsx uses /run/current-system/sw paths', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'nixos'], tmpDir);
 
-    run(['test-greeter', '-p', 'nixos'], tmpDir);
-
-    const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
-    expect(content).toContain('/run/current-system/sw/share/wayland-sessions');
+      const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
+      expect(content).toContain('/run/current-system/sw/share/wayland-sessions');
+    });
   });
 
-  test('arch Greeter.tsx uses /usr/share paths', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('arch Greeter.tsx uses /usr/share paths', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'arch'], tmpDir);
 
-    run(['test-greeter', '-p', 'arch'], tmpDir);
-
-    const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
-    expect(content).toContain('/usr/share/wayland-sessions');
+      const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
+      expect(content).toContain('/usr/share/wayland-sessions');
+    });
   });
 
-  test('nix Greeter.tsx uses /usr/share paths', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('nix Greeter.tsx uses /usr/share paths', () => {
+    withTmpDir((tmpDir) => {
+      run(['test-greeter', '-p', 'nix'], tmpDir);
 
-    run(['test-greeter', '-p', 'nix'], tmpDir);
-
-    const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
-    expect(content).toContain('/usr/share/wayland-sessions');
+      const content = fs.readFileSync(path.join(tmpDir, 'test-greeter', 'src', 'components', 'Greeter.tsx'), 'utf-8');
+      expect(content).toContain('/usr/share/wayland-sessions');
+    });
   });
 
-  test('fails when target directory is not empty', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('fails when target directory is not empty', () => {
+    withTmpDir((tmpDir) => {
+      const projectDir = path.join(tmpDir, 'existing');
+      fs.mkdirSync(projectDir);
+      fs.writeFileSync(path.join(projectDir, 'file.txt'), 'content');
 
-    const projectDir = path.join(tmpDir, 'existing');
-    fs.mkdirSync(projectDir);
-    fs.writeFileSync(path.join(projectDir, 'file.txt'), 'content');
-
-    expect(() => run(['existing', '-p', 'arch'], tmpDir)).toThrow();
+      expect(() => run(['existing', '-p', 'arch'], tmpDir)).toThrow();
+    });
   });
 
-  test('succeeds when target directory exists but is empty', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('succeeds when target directory exists but is empty', () => {
+    withTmpDir((tmpDir) => {
+      const projectDir = path.join(tmpDir, 'empty-dir');
+      fs.mkdirSync(projectDir);
 
-    const projectDir = path.join(tmpDir, 'empty-dir');
-    fs.mkdirSync(projectDir);
+      run(['empty-dir', '-p', 'arch'], tmpDir);
 
-    run(['empty-dir', '-p', 'arch'], tmpDir);
-
-    expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+      expect(fs.existsSync(path.join(projectDir, 'package.json'))).toBe(true);
+    });
   });
 
-  test('fails with invalid project name', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
-
-    expect(() => run(['INVALID!', '-p', 'arch'], tmpDir)).toThrow();
+  test.concurrent('fails with invalid project name', () => {
+    withTmpDir((tmpDir) => {
+      expect(() => run(['INVALID!', '-p', 'arch'], tmpDir)).toThrow();
+    });
   });
 
-  test('fails with invalid platform', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
-
-    expect(() => run(['test-greeter', '-p', 'windows'], tmpDir)).toThrow();
+  test.concurrent('fails with invalid platform', () => {
+    withTmpDir((tmpDir) => {
+      expect(() => run(['test-greeter', '-p', 'windows'], tmpDir)).toThrow();
+    });
   });
 
-  test('generates into current directory with "."', () => {
-    const tmpDir = createTmpDir();
-    tmpDirs.push(tmpDir);
+  test.concurrent('generates into current directory with "."', () => {
+    withTmpDir((tmpDir) => {
+      run(['.', '-p', 'arch'], tmpDir);
 
-    run(['.', '-p', 'arch'], tmpDir);
+      expect(fs.existsSync(path.join(tmpDir, 'package.json'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'src', 'app.tsx'))).toBe(true);
 
-    expect(fs.existsSync(path.join(tmpDir, 'package.json'))).toBe(true);
-    expect(fs.existsSync(path.join(tmpDir, 'src', 'app.tsx'))).toBe(true);
-
-    // package.json name should be the directory basename, not "."
-    const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
-    expect(pkg.name).not.toBe('.');
+      const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+      expect(pkg.name).not.toBe('.');
+    });
   });
 });
+
