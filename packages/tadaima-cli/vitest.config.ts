@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      enabled: true,
+      enabled: false,
       reporter: ['html'],
       include: ['src/**/*.ts'],
     },

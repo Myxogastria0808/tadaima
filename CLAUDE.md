@@ -44,7 +44,8 @@ pnpm run wiki:build         # Build wiki for deployment
 ### Package publishing
 
 ```sh
-pnpm run package:pub        # Publish to npm
+pnpm run tadaima:pub        # Publish tadaima to npm
+pnpm run tadaima-cli:pub    # Publish tadaima-cli to npm
 ```
 
 ## Architecture
