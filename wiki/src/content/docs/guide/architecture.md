@@ -6,18 +6,20 @@ description: How tadaima and greetd work together
 ## Overview
 
 ```
-greetd → dbus-run-session → cage → greeter binary
-                                      │
-                              ┌───────┴────────┐
-                              │  GJS + GTK4    │
-                              │  (bundled JS)  │
-                              └───────┬────────┘
-                                      │ Unix socket (GREETD_SOCK)
-                              ┌───────┴────────┐
-                              │  greetd        │
-                              │  (PAM auth)    │
-                              └────────────────┘
+┌─────────┐     ┌──────────────────┐     ┌─────────┐     ┌─────────────────────┐
+│ greetd  │────▶│ dbus-run-session │────▶│  cage   │────▶│ greeter (GJS+GTK4)  │
+│ (PAM)   │     └──────────────────┘     │ (kiosk) │     │ (your UI + tadaima) │
+└─────────┘                              └─────────┘     └─────────────────────┘
+     ▲                                                               ▲
+     │                                                               │
+     │                   greetd-ipc(7) protocol                      │
+     └───────────────────────────────────────────────────────────────┘
 ```
+
+- **greetd** launches the greeter through a command chain (dbus-run-session → cage → greeter)
+- **dbus-run-session** provides a D-Bus session bus
+- **cage** runs the greeter fullscreen as a Wayland kiosk compositor
+- **greeter ⇄ greetd** communicate via Unix socket (`GREETD_SOCK`) using the greetd-ipc JSON protocol.
 
 ## Components
 
@@ -80,3 +82,4 @@ Wire format: 4-byte length prefix (host byte order) + UTF-8 JSON payload.
 { "type": "error", "error_type": "auth_error", "description": "..." }
 { "type": "auth_message", "auth_message_type": "secret", "auth_message": "Password:" }
 ```
+

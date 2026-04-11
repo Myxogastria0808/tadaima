@@ -19,15 +19,24 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Introduction', slug: 'getting-started/introduction' },
-            { label: 'Installation', slug: 'getting-started/installation' },
+            { label: 'NixOS', slug: 'getting-started/nixos' },
+            { label: 'Nix (non-NixOS)', slug: 'getting-started/nix' },
+            { label: 'Arch Linux', slug: 'getting-started/arch' },
           ],
         },
         {
           label: 'Guide',
           items: [
             { label: 'API Overview', slug: 'guide/api-overview' },
-            { label: 'Examples', slug: 'guide/examples' },
             { label: 'Architecture', slug: 'guide/architecture' },
+          ],
+        },
+        {
+          label: 'Examples',
+          items: [
+            { label: 'NixOS', slug: 'guide/examples/nixos' },
+            { label: 'Nix (non-NixOS)', slug: 'guide/examples/nix' },
+            { label: 'Arch Linux', slug: 'guide/examples/arch' },
           ],
         },
         {
