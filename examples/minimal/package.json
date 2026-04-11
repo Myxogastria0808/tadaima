@@ -1,0 +1,8 @@
+{
+  "name": "tadaima-example-minimal",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "tadaima": "workspace:*"
+  }
+}

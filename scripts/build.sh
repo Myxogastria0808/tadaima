@@ -20,9 +20,10 @@ usage() {
 	printf "    pnpm run nix:build:<target>\n"
 	printf "\n"
 	printf "  ${YELLOW}Targets:${RESET}\n"
-	printf "    simple   Bare-minimum login form, no wallpaper\n"
+	printf "    minimal  No wallpaper, no styling, no CSS\n"
+	printf "    simple   No wallpaper + Catppuccin Mocha styling\n"
 	printf "    image    Static image wallpaper + Catppuccin Mocha\n"
-	printf "    movie    Video/image wallpaper + GStreamer\n"
+	printf "    movie    Video wallpaper + GStreamer + Catppuccin Mocha\n"
 	printf "\n"
 	printf "  ${YELLOW}Examples:${RESET}\n"
 	printf "    pnpm run nix:build simple\n"
@@ -36,7 +37,7 @@ if [ -z "$TARGET" ]; then
 fi
 
 case "$TARGET" in
-simple | image | movie) ;;
+minimal | simple | image | movie) ;;
 *)
 	error "Unknown target: $TARGET"
 	usage

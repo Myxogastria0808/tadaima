@@ -43,3 +43,7 @@ else
 	exit 1
 fi
 
+# Fix tsconfig.json target: ags generates ES2020 but we use ES2022
+sed -i 's/"target": "ES2020"/"target": "ES2022"/' tsconfig.json
+ok "tsconfig.json target updated to ES2022."
+

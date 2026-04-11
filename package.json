@@ -25,6 +25,7 @@
     "wiki:preview": "pnpm -C wiki preview",
     "wiki:astro": "pnpm -C wiki astro",
     "ags:types": "sh scripts/types.sh",
+    "nix:build:minimal": "sh scripts/build.sh minimal",
     "nix:build:simple": "sh scripts/build.sh simple",
     "nix:build:image": "sh scripts/build.sh image",
     "nix:build:movie": "sh scripts/build.sh movie",

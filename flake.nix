@@ -45,7 +45,36 @@
       };
 
       packages.${system} = {
-        # Bare-minimum greeter — no wallpaper, no styling, just the login form
+        # Absolute minimum greeter — no wallpaper, no styling, no CSS
+        minimal = pkgs.stdenv.mkDerivation {
+          name = "tadaima-minimal";
+          src = ./examples/minimal;
+
+          nativeBuildInputs = with pkgs; [
+            wrapGAppsHook3
+            gobject-introspection
+            ags.packages.${system}.default
+          ];
+
+          buildInputs = [
+            pkgs.glib
+            pkgs.gjs
+            astal.packages.${system}.io
+            astal.packages.${system}.astal4
+          ];
+
+          preBuild = ''
+            mkdir -p node_modules
+            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin
+            ags bundle src/app.tsx $out/bin/greeter
+          '';
+        };
+
+        # Bare-minimum greeter — no wallpaper, Catppuccin Mocha styling
         simple = pkgs.stdenv.mkDerivation {
           name = "tadaima-simple";
           src = ./examples/simple;
