@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "tadaima": "workspace:*"
+    "@myxogastria0808/tadaima": "workspace:*"
   }
 }

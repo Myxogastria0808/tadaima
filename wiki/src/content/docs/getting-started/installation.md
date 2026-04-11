@@ -120,7 +120,7 @@ sudo systemctl enable greetd
    ```sh
    mkdir my-greeter && cd my-greeter
    npm init -y
-   npm install tadaima
+   npm install @myxogastria0808/tadaima
    ags types --update --directory .
    ags bundle src/app.tsx ./my-greeter
    ```

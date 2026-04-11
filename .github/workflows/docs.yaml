@@ -23,14 +23,14 @@ jobs:
         run: nix develop --command bash -c "pnpm run ags:types"
       - name: Build Typedoc (tadaima)
         run: nix develop --command bash -c "pnpm run tadaima:typedoc:build"
-      - name: Build Typedoc (tadaima-cli)
-        run: nix develop --command bash -c "pnpm run tadaima-cli:typedoc:build"
+      - name: Build Typedoc (create-tadaima)
+        run: nix develop --command bash -c "pnpm run create-tadaima:typedoc:build"
       - name: Assemble Publish Directory
         run: |
           mkdir -p _site
           cp -r docs/ _site
           cp -r packages/tadaima/docs _site/tadaima
-          cp -r packages/tadaima-cli/docs _site/tadaima-cli
+          cp -r packages/create-tadaima/docs _site/create-tadaima
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

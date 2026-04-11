@@ -4,7 +4,7 @@
 import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
 import style from './style.scss';
-import { createGreeter } from 'tadaima';
+import { createGreeter } from '@myxogastria0808/tadaima';
 
 const Greeter = (): void => {
   app.apply_css(style);

@@ -48,25 +48,25 @@ pnpm run lint:check         # Check lint (CI)
 ```sh
 pnpm run tadaima:typedoc:build       # Generate tadaima API docs
 pnpm run tadaima:typedoc:preview     # Preview tadaima API docs
-pnpm run tadaima-cli:typedoc:build   # Generate tadaima-cli API docs
-pnpm run tadaima-cli:typedoc:preview # Preview tadaima-cli API docs
+pnpm run create-tadaima:typedoc:build   # Generate create-tadaima API docs
+pnpm run create-tadaima:typedoc:preview # Preview create-tadaima API docs
 pnpm run wiki:dev                    # Astro dev server for wiki
 pnpm run wiki:build                  # Build wiki for deployment
 ```
 
-### tadaima-cli
+### create-tadaima
 
 ```sh
-pnpm run tadaima-cli:dev     # Build + run CLI (in tmp/)
-pnpm run tadaima-cli:build   # Build with tsup
-pnpm run tadaima-cli:test    # Run integration tests (vitest + execa)
+pnpm run create-tadaima:dev     # Build + run CLI (in tmp/)
+pnpm run create-tadaima:build   # Build with tsup
+pnpm run create-tadaima:test    # Run integration tests (vitest + execa)
 ```
 
 ### Package publishing
 
 ```sh
 pnpm run tadaima:pub         # Publish tadaima to npm
-pnpm run tadaima-cli:pub     # Publish tadaima-cli to npm
+pnpm run create-tadaima:pub     # Publish create-tadaima to npm
 ```
 
 ## Architecture
@@ -82,7 +82,7 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 ### Monorepo structure (pnpm workspaces)
 
 - **`packages/tadaima/`** — The npm library (`tadaima`). Source is in `packages/tadaima/src/`.
-- **`packages/tadaima-cli/`** — CLI scaffolding tool (`npx create-tadaima`). Built with `@clack/prompts` and `tsup`.
+- **`packages/create-tadaima/`** — CLI scaffolding tool (`npx create-tadaima`). Built with `@clack/prompts` and `tsup`.
 - **`examples/`** — Three example greeters (simple, image, movie). Each has `src/app.tsx`, `src/components/Greeter.tsx`, and `src/components/style.scss`.
 - **`wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
 - **`nix/module.nix`** — NixOS service module (`services.tadaima`).
@@ -97,7 +97,7 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 
 Public API is re-exported from `packages/tadaima/src/index.ts`.
 
-### tadaima-cli structure (`packages/tadaima-cli/`)
+### create-tadaima structure (`packages/create-tadaima/`)
 
 - **`src/cli.ts`** — Entry point (args → prompts → generate → outro).
 - **`src/lib/args.ts`** — CLI argument parsing with `node:util` `parseArgs`.
@@ -118,7 +118,7 @@ Public API is re-exported from `packages/tadaima/src/index.ts`.
 - Strict mode enabled
 - Target: ES2020
 
-### tadaima-cli
+### create-tadaima
 
 - Module: ES2022, moduleResolution: Bundler
 - Target: ES2022

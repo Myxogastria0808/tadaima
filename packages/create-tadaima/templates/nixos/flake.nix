@@ -96,7 +96,8 @@
 
         preBuild = ''
           mkdir -p node_modules
-          ln -sf ${tadaima}/packages/tadaima/src node_modules/tadaima
+          mkdir -p node_modules/@myxogastria0808
+          ln -sf ${tadaima}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
         '';
 
         installPhase = ''

@@ -2,9 +2,9 @@
 
 [![Wiki](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml)
 [![Docs](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml)
-[![NPM Version](https://img.shields.io/npm/v/tadaima.svg)](https://www.npmjs.com/package/tadaima)
-![NPM Type Definitions](https://img.shields.io/npm/types/tadaima)
-[![Download NPM](https://img.shields.io/npm/dm/tadaima.svg?style=flat)](https://www.npmjs.com/package/tadaima/)
+[![NPM Version](https://img.shields.io/npm/v/@myxogastria0808/tadaima.svg)](https://www.npmjs.com/package/@myxogastria0808/tadaima)
+![NPM Type Definitions](https://img.shields.io/npm/types/@myxogastria0808/tadaima)
+[![Download NPM](https://img.shields.io/npm/dm/@myxogastria0808/tadaima.svg?style=flat)](https://www.npmjs.com/package/@myxogastria0808/tadaima/)
 ![GitHub License](https://img.shields.io/github/license/Myxogastria0808/tadaima)
 ![Typedoc](https://img.shields.io/badge/docs-typedoc-blue?style=flat-square&logo=typescript&logoColor=white)
 [![RenovateBot](https://img.shields.io/badge/RenovateBot-1A1F6C?logo=renovate&logoColor=fff)](#)
@@ -20,9 +20,9 @@ Build your own Linux login screen with GTK4 and TypeScript (JSX). tadaima handle
 
 <div align="center">
 
-[<img src="https://img.shields.io/badge/▶_Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" />](https://tadaima.yukiosada.work/)
-&nbsp;&nbsp;
-[<img src="https://img.shields.io/badge/▶_API_Reference-TypeDoc-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference" />](https://myxogastria0808.github.io/tadaima/tadaima/)
+<a href="https://tadaima.yukiosada.work/"><img src="https://img.shields.io/badge/Wiki-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" /></a>
+&nbsp;
+<a href="https://myxogastria0808.github.io/tadaima/tadaima/"><img src="https://img.shields.io/badge/API_Reference-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference" /></a>
 
 </div>
 
@@ -64,7 +64,7 @@ app.start({
 // src/components/Greeter.tsx
 import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
-import { createGreeter } from 'tadaima';
+import { createGreeter } from '@myxogastria0808/tadaima';
 
 const Greeter = (): void => {
   const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({

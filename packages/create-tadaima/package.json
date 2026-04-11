@@ -1,12 +1,12 @@
 {
-  "name": "tadaima-cli",
+  "name": "@myxogastria0808/create-tadaima",
   "version": "0.0.1",
   "description": "Scaffold a tadaima greeter project",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Myxogastria0808/tadaima",
-    "directory": "packages/tadaima-cli"
+    "directory": "packages/create-tadaima"
   },
   "bin": {
     "create-tadaima": "./dist/cli.js"
@@ -20,8 +20,8 @@
   "type": "module",
   "scripts": {
     "pub": "pnpm publish --access=public",
-    "unpub": "pnpm unpublish tadaima-cli@${npm_config_v}",
-    "dev": "tsup && cd ../../ && mkdir -p tmp && cd tmp && node ../packages/tadaima-cli/dist/cli.js",
+    "unpub": "pnpm unpublish @myxogastria0808/create-tadaima@${npm_config_v}",
+    "dev": "tsup && cd ../../ && mkdir -p tmp && cd tmp && node ../packages/create-tadaima/dist/cli.js",
     "build": "tsup",
     "start": "node dist/cli.js",
     "test": "vitest run --typecheck",

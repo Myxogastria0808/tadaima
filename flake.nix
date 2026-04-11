@@ -65,7 +65,8 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
+            mkdir -p node_modules/@myxogastria0808
+            ln -sf ${self}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
           '';
 
           installPhase = ''
@@ -95,7 +96,8 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
+            mkdir -p node_modules/@myxogastria0808
+            ln -sf ${self}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
           '';
 
           installPhase = ''
@@ -125,7 +127,8 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
+            mkdir -p node_modules/@myxogastria0808
+            ln -sf ${self}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
           '';
 
           installPhase = ''
@@ -166,7 +169,8 @@
 
           preBuild = ''
             mkdir -p node_modules
-            ln -sf ${self}/packages/tadaima/src node_modules/tadaima
+            mkdir -p node_modules/@myxogastria0808
+            ln -sf ${self}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
           '';
 
           installPhase = ''
