@@ -64,4 +64,3 @@ my-greeter/
   .envrc             # NixOS / Nix only
   .gitignore
 ```
-

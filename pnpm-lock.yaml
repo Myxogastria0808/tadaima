@@ -87,6 +87,12 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tadaima
 
+  examples/minimal:
+    dependencies:
+      tadaima:
+        specifier: workspace:*
+        version: link:../../packages/tadaima
+
   examples/movie:
     dependencies:
       tadaima:

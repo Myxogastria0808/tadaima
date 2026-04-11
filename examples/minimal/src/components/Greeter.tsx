@@ -35,11 +35,7 @@ const Greeter = (): void => {
 
   const win = (
     <Gtk.ApplicationWindow application={app} name="greeter">
-      <Gtk.Box
-        orientation={Gtk.Orientation.VERTICAL}
-        valign={Gtk.Align.CENTER}
-        halign={Gtk.Align.CENTER}
-      >
+      <Gtk.Box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
         <Gtk.Label label="Login" />
         <Gtk.Entry
           text={cache.username}

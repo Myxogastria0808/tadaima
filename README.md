@@ -1,11 +1,11 @@
 # tadaima
 
-[![Wiki](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml)
-[![Docs](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml)
-[![tadaima-cli Test](https://github.com/Myxogastria0808/tadaima/actions/workflows/tadaima-cli-test.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/tadaima-cli-test.yaml)
-[![CI](https://github.com/Myxogastria0808/tadaima/actions/workflows/ci.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/ci.yaml)
-![GitHub License](https://img.shields.io/github/license/Myxogastria0808/tadaima)
-[![RenovateBot](https://img.shields.io/badge/RenovateBot-1A1F6C?logo=renovate&logoColor=fff)](#)
+[![Wiki Deploy](https://img.shields.io/github/actions/workflow/status/Myxogastria0808/tadaima/wiki.yaml?label=Wiki&logo=cloudflare&logoColor=white&style=flat-square)](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml)
+[![Docs Deploy](https://img.shields.io/github/actions/workflow/status/Myxogastria0808/tadaima/docs.yaml?label=Docs&logo=githubpages&logoColor=white&style=flat-square)](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml)
+[![tadaima-cli Test](https://img.shields.io/github/actions/workflow/status/Myxogastria0808/tadaima/tadaima-cli-test.yaml?label=Test&logo=vitest&logoColor=white&style=flat-square)](https://github.com/Myxogastria0808/tadaima/actions/workflows/tadaima-cli-test.yaml)
+[![CI](https://img.shields.io/github/actions/workflow/status/Myxogastria0808/tadaima/ci.yaml?label=CI&logo=github&logoColor=white&style=flat-square)](https://github.com/Myxogastria0808/tadaima/actions/workflows/ci.yaml)
+![GitHub License](https://img.shields.io/github/license/Myxogastria0808/tadaima?style=flat-square)
+[![RenovateBot](https://img.shields.io/badge/RenovateBot-1A1F6C?style=flat-square&logo=renovate&logoColor=fff)](#)
 
 > [!WARNING]
 > This project is under active development and not yet stable. APIs may change without notice.
@@ -40,4 +40,3 @@ Build your own Linux login screen with GTK4 and TypeScript (JSX). tadaima handle
 ```sh
 npx create-tadaima my-greeter
 ```
-
