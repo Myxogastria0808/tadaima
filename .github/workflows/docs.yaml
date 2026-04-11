@@ -28,7 +28,7 @@ jobs:
       - name: Assemble Publish Directory
         run: |
           mkdir -p _site
-          cp -r docs/* _site/tadaima
+          cp -a docs/. _site/tadaima
           cp -r packages/tadaima/docs _site/tadaima/tadaima
           cp -r packages/create-tadaima/docs _site/tadaima/create-tadaima
       - name: Deploy to GitHub Pages
