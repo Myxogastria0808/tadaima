@@ -6,7 +6,7 @@ import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
 import Gio from 'gi://Gio';
 import style from './style.scss';
-import { createGreeter } from 'tadaima';
+import { createGreeter } from '@myxogastria0808/tadaima';
 
 const WALLPAPER_PATH = '/var/cache/tadaima/wallpaper.mp4';
 

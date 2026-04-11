@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "import", "typescript"],
+  "rules": {
+    "no-unused-vars": ["warn", { "caughtErrorsIgnorePattern": "^_" }]
+  },
+  "globals": {
+    "Gio": "readonly",
+    "GLib": "readonly",
+    "Gtk": "readonly",
+    "Gdk": "readonly",
+    "GObject": "readonly",
+    "console": "readonly",
+    "log": "readonly",
+    "print": "readonly",
+    "printerr": "readonly",
+    "imports": "readonly"
+  }
+}

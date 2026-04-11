@@ -1,5 +1,5 @@
 /**
- * tadaima-cli — Scaffold a tadaima greeter project.
+ * create-tadaima — Scaffold a tadaima greeter project.
  *
  * @packageDocumentation
  */

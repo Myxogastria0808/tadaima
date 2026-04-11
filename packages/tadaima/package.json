@@ -1,5 +1,5 @@
 {
-  "name": "tadaima",
+  "name": "@myxogastria0808/tadaima",
   "version": "0.0.1",
   "description": "A greetd greeter library for AGS/GJS",
   "keywords": [
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "pub": "pnpm publish --access=public",
-    "unpub": "pnpm unpublish tadaima@${npm_config_v}",
+    "unpub": "pnpm unpublish @myxogastria0808/tadaima@${npm_config_v}",
     "typedoc:build": "typedoc",
     "typedoc:preview": "browser-sync start --server docs --no-open"
   },

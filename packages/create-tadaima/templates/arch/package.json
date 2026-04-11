@@ -1,0 +1,21 @@
+{
+  "name": "{{projectName}}",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "pnpm install && sh scripts/types.sh",
+    "types": "sh scripts/types.sh",
+    "build": "sh scripts/build.sh",
+    "fmt": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
+    "lint": "oxlint --fix .",
+    "lint:check": "oxlint ."
+  },
+  "dependencies": {
+    "@myxogastria0808/tadaima": "^0.0.1"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0"
+  }
+}

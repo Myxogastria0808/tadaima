@@ -1,6 +1,6 @@
 import app from 'ags/gtk4/app';
 import { Gtk } from 'ags/gtk4';
-import { createGreeter } from 'tadaima';
+import { createGreeter } from '@myxogastria0808/tadaima';
 
 const Greeter = (): void => {
   const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({

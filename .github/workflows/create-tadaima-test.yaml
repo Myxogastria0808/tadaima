@@ -1,4 +1,4 @@
-name: tadaima-cli test
+name: create-tadaima test
 
 permissions:
   contents: read
@@ -22,5 +22,5 @@ jobs:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       - name: Install Dependencies
         run: nix develop --command bash -c "pnpm install"
-      - name: Test (Only tadaima-cli Test)
-        run: nix develop --command bash -c "pnpm run tadaima-cli:test"
+      - name: Test (Only create-tadaima Test)
+        run: nix develop --command bash -c "pnpm run create-tadaima:test"
