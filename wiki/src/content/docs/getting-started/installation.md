@@ -3,6 +3,14 @@ title: Installation
 description: How to install and set up tadaima
 ---
 
+## Quick Start (All platforms)
+
+```sh
+npx create-tadaima my-greeter
+```
+
+The CLI will prompt you for a project name and platform (Arch Linux / NixOS / Nix on other distro).
+
 ## NixOS
 
 Add tadaima to your flake inputs:
@@ -23,15 +31,16 @@ imports = [ inputs.tadaima.nixosModules.default ];
 
 services.tadaima = {
   enable = true;
-  package = inputs.tadaima.packages.${system}.movie;  # or .simple, .image
+  package = inputs.tadaima.packages.${system}.movie;  # or .minimal, .simple, .image
 };
 ```
 
-| Package  | Description                                                   |
-| -------- | ------------------------------------------------------------- |
-| `simple` | Bare-minimum login form, no wallpaper, no styling             |
-| `image`  | Static image wallpaper with Catppuccin Mocha theme            |
-| `movie`  | Video/image wallpaper with GStreamer + Catppuccin Mocha theme |
+| Package   | Description                                       |
+| --------- | ------------------------------------------------- |
+| `minimal` | No wallpaper, no styling, no CSS                  |
+| `simple`  | No wallpaper, Catppuccin Mocha styling            |
+| `image`   | Static image wallpaper + Catppuccin Mocha         |
+| `movie`   | Video wallpaper + GStreamer + Catppuccin Mocha     |
 
 ### Build your own greeter
 
@@ -54,8 +63,8 @@ myGreeter = pkgs.stdenv.mkDerivation {
   ];
 
   preBuild = ''
-    mkdir -p node_modules
-    ln -s ${inputs.tadaima}/packages/tadaima/src node_modules/tadaima
+    mkdir -p node_modules/@myxogastria0808
+    ln -s ${inputs.tadaima}/packages/tadaima/src node_modules/@myxogastria0808/tadaima
   '';
 
   installPhase = ''
@@ -79,7 +88,12 @@ If you have Nix installed on another distro, you can build a greeter with `nix b
 nix build github:Myxogastria0808/tadaima#movie
 ```
 
-Configure greetd manually:
+Find the store path and configure greetd:
+
+```sh
+readlink ./result
+# Example output: /nix/store/abc123...-tadaima-movie
+```
 
 ```toml
 # /etc/greetd/config.toml
@@ -87,9 +101,17 @@ Configure greetd manually:
 vt = 1
 
 [default_session]
-command = "dbus-run-session cage -s -d -- /path/to/result/bin/greeter"
+command = "dbus-run-session cage -s -d -- /nix/store/abc123...-tadaima-movie/bin/greeter"
 user = "greeter"
 ```
+
+Pin the build result to prevent garbage collection:
+
+```sh
+sudo nix build --out-link /etc/greetd/greeter-link
+```
+
+Create cache directory and enable greetd:
 
 ```sh
 sudo mkdir -p /var/cache/tadaima
@@ -111,18 +133,17 @@ sudo systemctl enable greetd
    ```sh
    git clone https://github.com/Myxogastria0808/tadaima.git
    cd tadaima/examples/movie
-   npm install
+   pnpm install
    ags bundle src/app.tsx ./my-greeter
    ```
 
    Or build your own greeter:
 
    ```sh
-   mkdir my-greeter && cd my-greeter
-   npm init -y
-   npm install @myxogastria0808/tadaima
-   ags types --update --directory .
-   ags bundle src/app.tsx ./my-greeter
+   npx create-tadaima my-greeter --platform arch
+   cd my-greeter
+   pnpm run setup
+   pnpm run build
    ```
 
 3. Configure greetd:

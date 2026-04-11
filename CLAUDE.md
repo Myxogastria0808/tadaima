@@ -27,6 +27,7 @@ pnpm run setup   # runs pnpm install + ags types + wiki build
 ### Build example greeters (Nix)
 
 ```sh
+nix build .#minimal
 nix build .#simple
 nix build .#image
 nix build .#movie
@@ -81,10 +82,11 @@ cage does not support `wlr-layer-shell`, so greeters must use `Gtk.ApplicationWi
 
 ### Monorepo structure (pnpm workspaces)
 
-- **`packages/tadaima/`** — The npm library (`tadaima`). Source is in `packages/tadaima/src/`.
-- **`packages/create-tadaima/`** — CLI scaffolding tool (`npx create-tadaima`). Built with `@clack/prompts` and `tsup`.
-- **`examples/`** — Three example greeters (simple, image, movie). Each has `src/app.tsx`, `src/components/Greeter.tsx`, and `src/components/style.scss`.
-- **`wiki/`** — Astro + Starlight documentation site, deployed to Cloudflare Workers.
+- **`packages/tadaima/`** — The npm library (`@myxogastria0808/tadaima`). Source is in `packages/tadaima/src/`.
+- **`packages/create-tadaima/`** — CLI scaffolding tool (`npx @myxogastria0808/create-tadaima`). Built with `@clack/prompts`, `validate-npm-package-name`, and `tsup`.
+- **`examples/`** — Four example greeters (minimal, simple, image, movie). Each has `src/app.tsx` and `src/components/Greeter.tsx`.
+- **`wiki/`** — Astro + Starlight documentation site (`@myxogastria0808/tadaima-wiki`), deployed to Cloudflare Workers.
+- **`scripts/`** — Shell scripts: `types.sh` (AGS type generation), `build.sh` (Nix example builds).
 - **`nix/module.nix`** — NixOS service module (`services.tadaima`).
 - **`@girs/`** — GObject Introspection type definitions (generated, not hand-written).
 
@@ -106,7 +108,11 @@ Public API is re-exported from `packages/tadaima/src/index.ts`.
 - **`src/lib/validate.ts`** — Project name and platform validation.
 - **`src/lib/types.ts`** — `PlatformType` (`arch` | `nixos` | `nix`).
 - **`src/index.ts`** — Re-exports for TypeDoc.
-- **`templates/`** — Project templates (common + platform-specific).
+- **`templates/`** — Project templates (common + platform-specific). Each platform has `scripts/build.sh`; common has `scripts/types.sh`.
+  - **`common/`** — Shared files: `.gitignore`, `LICENSE`, `src/`, `scripts/types.sh`, `.oxlintrc.json`, `.oxfmtrc.json`.
+  - **`arch/`** — Arch Linux: `package.json` (with `@myxogastria0808/tadaima` dep), `scripts/build.sh` (`ags bundle`).
+  - **`nixos/`** — NixOS: `package.json`, `flake.nix` (with nixosModules), `scripts/build.sh` (`nix build`).
+  - **`nix/`** — Nix (non-NixOS): `package.json`, `flake.nix` (no nixosModules), `scripts/build.sh` (`nix build`).
 - **`__tests__/cli.test.ts`** — Integration tests (execa subprocess, create-vite style).
 
 ## TypeScript Configuration
@@ -116,7 +122,7 @@ Public API is re-exported from `packages/tadaima/src/index.ts`.
 - JSX: `react-jsx` with `jsxImportSource: "ags/gtk4"` (Gnim JSX for GTK4)
 - Module: ES2022, moduleResolution: Bundler
 - Strict mode enabled
-- Target: ES2020
+- Target: ES2022
 
 ### create-tadaima
 

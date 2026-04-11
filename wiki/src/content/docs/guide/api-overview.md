@@ -6,7 +6,7 @@ description: How to use the tadaima API
 ## createGreeter
 
 ```typescript
-import { createGreeter } from 'tadaima';
+import { createGreeter } from '@myxogastria0808/tadaima';
 
 const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
   sessionDirs: ['/usr/share/wayland-sessions', '/usr/share/xsessions'],
