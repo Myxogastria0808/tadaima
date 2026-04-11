@@ -19,14 +19,14 @@ Scaffold a [tadaima](https://www.npmjs.com/package/tadaima) greeter project.
 
 <div align="center">
 
-[![Wiki](https://img.shields.io/badge/Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white)](https://tadaima.yukiosada.work/)
-[![API Reference](https://img.shields.io/badge/API_Reference-TypeDoc-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://myxogastria0808.github.io/tadaima/tadaima-cli/)
-
-|                 Wiki                  |       API Reference        |
-| :-----------------------------------: | :------------------------: |
-| Installation, getting started, guides | TypeDoc generated API docs |
+[<img src="https://img.shields.io/badge/▶_Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" />](https://tadaima.yukiosada.work/)
+&nbsp;&nbsp;
+[<img src="https://img.shields.io/badge/▶_API_Reference-TypeDoc-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference" />](https://myxogastria0808.github.io/tadaima/tadaima-cli/)
 
 </div>
+
+- [Wiki](https://tadaima.yukiosada.work/) -- Installation, getting started, guides
+- [API Reference](https://myxogastria0808.github.io/tadaima/tadaima-cli/) -- TypeDoc generated API docs
 
 ## Usage
 
