@@ -83,38 +83,29 @@ importers:
 
   examples/image:
     dependencies:
-      tadaima:
+      '@myxogastria0808/tadaima':
         specifier: workspace:*
         version: link:../../packages/tadaima
 
   examples/minimal:
     dependencies:
-      tadaima:
+      '@myxogastria0808/tadaima':
         specifier: workspace:*
         version: link:../../packages/tadaima
 
   examples/movie:
     dependencies:
-      tadaima:
+      '@myxogastria0808/tadaima':
         specifier: workspace:*
         version: link:../../packages/tadaima
 
   examples/simple:
     dependencies:
-      tadaima:
+      '@myxogastria0808/tadaima':
         specifier: workspace:*
         version: link:../../packages/tadaima
 
-  packages/tadaima:
-    devDependencies:
-      browser-sync:
-        specifier: catalog:typedoc
-        version: 3.0.4
-      typedoc:
-        specifier: catalog:typedoc
-        version: 0.28.18(typescript@6.0.2)
-
-  packages/tadaima-cli:
+  packages/create-tadaima:
     dependencies:
       '@clack/prompts':
         specifier: catalog:cli
@@ -144,6 +135,15 @@ importers:
       vitest:
         specifier: catalog:cli
         version: 4.1.4(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(@vitest/ui@4.1.4)(vite@7.3.2(@types/node@25.6.0)(tsx@4.21.0)(yaml@2.8.3))
+
+  packages/tadaima:
+    devDependencies:
+      browser-sync:
+        specifier: catalog:typedoc
+        version: 3.0.4
+      typedoc:
+        specifier: catalog:typedoc
+        version: 0.28.18(typescript@6.0.2)
 
   wiki:
     dependencies:
@@ -4703,7 +4703,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 25.6.0
 
   '@types/debug@4.1.13':
     dependencies:
@@ -4759,7 +4759,7 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 25.6.0
 
   '@typescript-eslint/parser@8.58.1(eslint@10.2.0)(typescript@6.0.2)':
     dependencies:
@@ -5393,7 +5393,7 @@ snapshots:
   engine.io@6.6.6:
     dependencies:
       '@types/cors': 2.8.19
-      '@types/node': 24.12.2
+      '@types/node': 25.6.0
       '@types/ws': 8.18.1
       accepts: 1.3.8
       base64id: 2.0.0
