@@ -32,9 +32,9 @@ Build your own Linux login screen with GTK4 and TypeScript (JSX). tadaima handle
 
 ## Packages
 
-| Package                                    | Description                                                     | npm                                                                                                       |
-| ------------------------------------------ | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| [**@myxogastria0808/tadaima**](./packages/tadaima/)         | Greeter library -- greetd IPC, session discovery, state caching | [![NPM Version](https://img.shields.io/npm/v/@myxogastria0808/tadaima.svg)](https://www.npmjs.com/package/@myxogastria0808/tadaima)         |
+| Package                                                           | Description                                                     | npm                                                                                                                                               |
+| ----------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [**@myxogastria0808/tadaima**](./packages/tadaima/)               | Greeter library -- greetd IPC, session discovery, state caching | [![NPM Version](https://img.shields.io/npm/v/@myxogastria0808/tadaima.svg)](https://www.npmjs.com/package/@myxogastria0808/tadaima)               |
 | [**@myxogastria0808/create-tadaima**](./packages/create-tadaima/) | Scaffolding CLI (`npx create-tadaima`)                          | [![NPM Version](https://img.shields.io/npm/v/@myxogastria0808/create-tadaima.svg)](https://www.npmjs.com/package/@myxogastria0808/create-tadaima) |
 
 ## Quick Start
