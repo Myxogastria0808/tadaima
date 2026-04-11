@@ -18,11 +18,11 @@ Build your own Linux login screen with GTK4 and TypeScript (JSX). tadaima handle
 
 <div align="center">
 
-[<img src="https://img.shields.io/badge/▶_Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" />](https://tadaima.yukiosada.work/)
+<a href="https://tadaima.yukiosada.work/"><img src="https://img.shields.io/badge/▶_Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white&logoSize=auto" alt="Wiki" height="36" style="border-radius:12px" /></a>
 &nbsp;&nbsp;
-[<img src="https://img.shields.io/badge/▶_API_Reference-tadaima-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference (tadaima)" />](https://myxogastria0808.github.io/tadaima/tadaima/)
+<a href="https://myxogastria0808.github.io/tadaima/tadaima/"><img src="https://img.shields.io/badge/▶_API_Reference-tadaima-3178C6?style=for-the-badge&logo=typescript&logoColor=white&logoSize=auto" alt="API Reference (tadaima)" height="36" style="border-radius:12px" /></a>
 &nbsp;&nbsp;
-[<img src="https://img.shields.io/badge/▶_API_Reference-tadaima--cli-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference (tadaima-cli)" />](https://myxogastria0808.github.io/tadaima/tadaima-cli/)
+<a href="https://myxogastria0808.github.io/tadaima/tadaima-cli/"><img src="https://img.shields.io/badge/▶_API_Reference-tadaima--cli-3178C6?style=for-the-badge&logo=typescript&logoColor=white&logoSize=auto" alt="API Reference (tadaima-cli)" height="36" style="border-radius:12px" /></a>
 
 </div>
 
