@@ -1,13 +1,16 @@
-# create-tadaima
+# @myxogastria0808/create-tadaima
 
 [![Wiki](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/wiki.yaml)
 [![Docs](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/docs.yaml)
 [![Test](https://github.com/Myxogastria0808/tadaima/actions/workflows/create-tadaima-test.yaml/badge.svg)](https://github.com/Myxogastria0808/tadaima/actions/workflows/create-tadaima-test.yaml)
 [![NPM Version](https://img.shields.io/npm/v/@myxogastria0808/create-tadaima.svg)](https://www.npmjs.com/package/@myxogastria0808/create-tadaima)
+![NPM Type Definitions](https://img.shields.io/npm/types/@myxogastria0808/create-tadaima)
 [![Download NPM](https://img.shields.io/npm/dm/@myxogastria0808/create-tadaima.svg?style=flat)](https://www.npmjs.com/package/@myxogastria0808/create-tadaima/)
+[![NPM Downloads All Time](https://badgen.net/npm/dt/@myxogastria0808/create-tadaima?label=downloads%20all%20time&color=cyan)](https://www.npmjs.com/package/@myxogastria0808/create-tadaima/)
 ![GitHub License](https://img.shields.io/github/license/Myxogastria0808/tadaima)
 ![Typedoc](https://img.shields.io/badge/docs-typedoc-blue?style=flat-square&logo=typescript&logoColor=white)
 ![Vitest](https://img.shields.io/badge/-vitest-6e9f18?style=flat&logo=vitest&logoColor=ffffff)
+[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 [![RenovateBot](https://img.shields.io/badge/RenovateBot-1A1F6C?logo=renovate&logoColor=fff)](#)
 
 > [!WARNING]
@@ -19,14 +22,14 @@ Scaffold a [@myxogastria0808/tadaima](https://www.npmjs.com/package/@myxogastria
 
 <div align="center">
 
-<a href="https://tadaima.yukiosada.work/"><img src="https://img.shields.io/badge/Wiki-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" /></a>
+<a href="https://tadaima.yukiosada.work/"><img src="https://img.shields.io/badge/Wiki-Getting_Started_&_Guides-8B5CF6?style=for-the-badge&logo=starlight&logoColor=white" alt="Wiki" /></a>
 &nbsp;
-<a href="https://myxogastria0808.github.io/tadaima/create-tadaima/"><img src="https://img.shields.io/badge/API_Reference-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference" /></a>
+<a href="https://myxogastria0808.github.io/tadaima/create-tadaima/"><img src="https://img.shields.io/badge/API_Docs-@myxogastria0808/create--tadaima-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="API Reference (@myxogastria0808/create-tadaima)" /></a>
 
 </div>
 
 - [Wiki](https://tadaima.yukiosada.work/) -- Installation, getting started, guides
-- [API Reference](https://myxogastria0808.github.io/tadaima/create-tadaima/) -- TypeDoc generated API docs
+- [API Reference (@myxogastria0808/create-tadaima)](https://myxogastria0808.github.io/tadaima/create-tadaima/) -- TypeDoc generated API docs
 
 ## Usage
 
