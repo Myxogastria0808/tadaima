@@ -24,6 +24,7 @@
     "wiki:build": "pnpm -C wiki build",
     "wiki:preview": "pnpm -C wiki preview",
     "wiki:astro": "pnpm -C wiki astro",
+    "docs:dev": "pnpm run tadaima:typedoc:build && pnpm run create-tadaima:typedoc:build && cp -r ./packages/tadaima/docs ./docs/tadaima && cp -r ./packages/create-tadaima/docs ./docs/create-tadaima && browser-sync start --server docs",
     "ags:types": "sh scripts/types.sh",
     "nix:build:minimal": "sh scripts/build.sh minimal",
     "nix:build:simple": "sh scripts/build.sh simple",
@@ -32,8 +33,10 @@
     "nix:build": "sh scripts/build.sh"
   },
   "devDependencies": {
+    "browser-sync": "catalog:typedoc",
     "oxfmt": "catalog:",
     "oxlint": "catalog:"
   },
   "packageManager": "pnpm@10.33.0"
 }
+
