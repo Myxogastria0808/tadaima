@@ -3,62 +3,45 @@ title: Examples (Nix)
 description: Using pre-built example greeters with Nix on non-NixOS
 ---
 
-tadaima includes four example greeters. With Nix on non-NixOS, you build them with `nix build` and configure greetd manually.
+tadaima includes four example greeters. On non-NixOS distributions with Nix, you build them directly from the remote flake with `nix build` and configure greetd manually.
 
 ## Available examples
 
-| Package   | Description                                   |
-| --------- | --------------------------------------------- |
-| `minimal` | No wallpaper, no styling, no CSS              |
-| `simple`  | No wallpaper, Catppuccin Mocha styling        |
-| `image`   | Static image wallpaper + Catppuccin Mocha     |
+| Package   | Description                                    |
+| --------- | ---------------------------------------------- |
+| `minimal` | No wallpaper, no styling, no CSS               |
+| `simple`  | No wallpaper, Catppuccin Mocha styling         |
+| `image`   | Static image wallpaper + Catppuccin Mocha      |
 | `movie`   | Video wallpaper + GStreamer + Catppuccin Mocha |
 
-## Build
+## Setup
 
-```sh
-nix build github:Myxogastria0808/tadaima#movie
-```
+### 1. Build and pin the greeter path
 
-Replace `#movie` with `#minimal`, `#simple`, or `#image`.
-
-## Find the store path
-
-```sh
-readlink ./result
-# Example output: /nix/store/abc123...-tadaima-movie
-```
-
-## Pin the build result
-
-Prevent garbage collection from removing the greeter:
+Build the greeter and create a symlink to prevent `nix-collect-garbage` from removing it:
 
 ```sh
 sudo nix build github:Myxogastria0808/tadaima#movie --out-link /etc/greetd/greeter-link
 ```
 
-## Configure greetd
+Replace `#movie` with `#minimal`, `#simple`, or `#image`.
 
-Edit `/etc/greetd/config.toml` using the store path:
+### 2. Configure greetd
+
+Edit `/etc/greetd/config.toml`:
 
 ```toml
 [terminal]
 vt = 1
 
 [default_session]
-command = "dbus-run-session cage -s -d -- /nix/store/abc123...-tadaima-movie/bin/greeter"
+command = "dbus-run-session cage -s -d -- /etc/greetd/greeter-link/bin/greeter"
 user = "greeter"
 ```
 
-## Create cache directory and enable greetd
+### 3. Setting a wallpaper (image / movie only)
 
-```sh
-sudo mkdir -p /var/cache/tadaima
-sudo chown greeter:greeter /var/cache/tadaima
-sudo systemctl enable greetd
-```
-
-## Setting a wallpaper (image / movie)
+If you chose `minimal` or `simple`, skip this step — they don't use a wallpaper.
 
 The `image` example expects `/var/cache/tadaima/wallpaper.png`.
 The `movie` example expects `/var/cache/tadaima/wallpaper.mp4`.
@@ -67,3 +50,14 @@ The `movie` example expects `/var/cache/tadaima/wallpaper.mp4`.
 sudo cp /path/to/wallpaper.png /var/cache/tadaima/wallpaper.png
 sudo chown greeter:greeter /var/cache/tadaima/wallpaper.png
 ```
+
+### 4. Create cache directory and enable greetd
+
+```sh
+sudo mkdir -p /var/cache/tadaima
+sudo chown greeter:greeter /var/cache/tadaima
+sudo systemctl enable greetd
+```
+
+Reboot and you should see the example greeter on the login screen.
+

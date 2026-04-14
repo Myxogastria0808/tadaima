@@ -7,18 +7,20 @@ tadaima includes four example greeters. On NixOS, you can use them directly via 
 
 ## Available examples
 
-| Package   | Description                                   |
-| --------- | --------------------------------------------- |
-| `minimal` | No wallpaper, no styling, no CSS              |
-| `simple`  | No wallpaper, Catppuccin Mocha styling        |
-| `image`   | Static image wallpaper + Catppuccin Mocha     |
+| Package   | Description                                    |
+| --------- | ---------------------------------------------- |
+| `minimal` | No wallpaper, no styling, no CSS               |
+| `simple`  | No wallpaper, Catppuccin Mocha styling         |
+| `image`   | Static image wallpaper + Catppuccin Mocha      |
 | `movie`   | Video wallpaper + GStreamer + Catppuccin Mocha |
 
 ## Setup
 
-Add tadaima to your system flake inputs:
+### 1. Add flake inputs
 
-```nix
+The flake.nix file containing your NixOS configuration must include [AGS](https://github.com/aylur/ags), [Astal](https://github.com/aylur/astal) and [@myxogastria0808/tadaima](https://tadaima.yukiosada.work) as inputs.
+
+```nix ins={6-22}
 # flake.nix
 {
   inputs = {
@@ -42,12 +44,22 @@ Add tadaima to your system flake inputs:
       inputs.astal.follows = "astal";
     };
   };
+
+  outputs = { nixpkgs, ... } @ inputs: {
+    nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./configuration.nix
+      ];
+    };
+  };
 }
 ```
 
-Import the NixOS module and select a package:
+### 2. Import the NixOS module and select a package
 
-```nix
+```nix ins={4-8}
 # configuration.nix
 { inputs, pkgs, ... }:
 {
@@ -62,28 +74,32 @@ Import the NixOS module and select a package:
 
 Replace `.movie` with `.minimal`, `.simple`, or `.image` to use a different example.
 
-Apply:
+- **`imports`** — Loads the tadaima NixOS module, which defines the `services.tadaima` options.
+- **`services.tadaima.enable`** — When `true`, the module automatically:
+  - Enables and configures `services.greetd` with the launch chain: `dbus-run-session` → `cage -s -d` → `greeter binary`.
+  - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user via `systemd.tmpfiles.rules`. tadaima uses this to persist the last selected user and session across reboots.
+- **`services.tadaima.package`** — The greeter binary package to launch. Here it points to one of tadaima's pre-built examples.
+- **`services.tadaima.cachePath`** — (optional, default: `/var/cache/tadaima`) Override the cache directory location if needed.
 
-```sh
-sudo nixos-rebuild switch
-```
+### 3. Set a wallpaper (image / movie only)
 
-## Setting a wallpaper (image / movie)
+If you chose `minimal` or `simple`, skip this step — they don't use a wallpaper.
 
 The `image` example expects `/var/cache/tadaima/wallpaper.png`.
 The `movie` example expects `/var/cache/tadaima/wallpaper.mp4`.
 
-If you use the [dotfiles](https://github.com/Myxogastria0808/dotfiles) wallpaper function:
-
-```sh
-wallpaper add -g /path/to/your/wallpaper.png
-```
-
-This copies the file to `/var/cache/tadaima/` and creates the appropriate symlinks.
-
-Otherwise, manually copy your wallpaper:
+Manually copy your wallpaper (e.g. when wallpaprer.png are settied as a greeter wallpaper):
 
 ```sh
 sudo cp /path/to/wallpaper.png /var/cache/tadaima/wallpaper.png
 sudo chown greeter:greeter /var/cache/tadaima/wallpaper.png
 ```
+
+### 4. Apply
+
+```sh
+sudo nixos-rebuild switch
+```
+
+Reboot and you should see the example greeter on the login screen.
+

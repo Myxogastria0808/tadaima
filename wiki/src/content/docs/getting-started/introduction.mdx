@@ -23,7 +23,7 @@ You bring the UI — use any GTK4 widget to design your login screen.
 - **No Astal Greet dependency** — tadaima implements the greetd IPC protocol directly, removing the need for `gi://AstalGreet`
 - **TypeScript first** — full type safety with JSDoc documentation
 - **Framework agnostic** — works with AGS/Gnim JSX, but the library itself has no UI opinions
-- **Distro agnostic** — works on NixOS, Arch-based distributions, and any system with greetd
+- **Distro agnostic** — works on NixOS, Arch-based distributions, and any system with greetd and Nix.
 
 ## Architecture
 
@@ -39,14 +39,11 @@ Choose your platform to get started:
     description="For Arch-based distributions (Arch, Manjaro, EndeavourOS, etc.)"
     href="/getting-started/arch/"
   />
-  <LinkCard
-    title="NixOS"
-    description="For NixOS with flake-based module integration"
-    href="/getting-started/nixos/"
-  />
+  <LinkCard title="NixOS" description="For NixOS with flake-based module integration" href="/getting-started/nixos/" />
   <LinkCard
     title="Nix (non-NixOS)"
     description="For using Nix as a package manager on other distributions"
     href="/getting-started/nix/"
   />
 </CardGrid>
+

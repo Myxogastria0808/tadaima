@@ -8,14 +8,14 @@ description: Getting started with tadaima on Arch-based distributions
 Install system dependencies:
 
 ```sh
-pacman -S greetd cage
+pacman -S greetd cage corepack
 yay -S aylurs-gtk-shell
 ```
 
 ## 1. Scaffold a new project
 
 ```sh
-npx create-tadaima my-greeter --platform arch
+pnpm dlx create-tadaima my-greeter --platform arch
 cd my-greeter
 ```
 
@@ -23,8 +23,14 @@ This generates:
 
 ```
 my-greeter/
-  package.json
   .gitignore
+  .oxfmtrc.json
+  .oxlintrc.json
+  LICENSE
+  package.json
+  scripts/
+    build.sh
+    types.sh
   src/
     app.tsx
     global.css
@@ -43,7 +49,9 @@ This runs `pnpm install` (installs `@myxogastria0808/tadaima` from npm) and gene
 
 ## 3. Customize the UI
 
-Edit `src/components/Greeter.tsx` to design your login screen.
+Edit `src/components/Greeter.tsx` to design your login screen. The generated template includes a minimal login form with Catppuccin Mocha styling.
+
+For a step-by-step guide on using the tadaima API, see [Usage](/guide/usage/).
 
 ## 4. Build
 
@@ -66,6 +74,7 @@ sudo cp ./greeter /usr/local/bin/my-greeter
 Edit `/etc/greetd/config.toml`:
 
 ```toml
+# /etc/greetd/config.toml
 [terminal]
 vt = 1
 
@@ -83,3 +92,4 @@ sudo systemctl enable greetd
 ```
 
 Reboot and you should see your greeter on the login screen.
+

@@ -7,7 +7,7 @@ description: Getting started with tadaima on NixOS
 
 The flake.nix file containing your NixOS configuration must include [AGS](https://github.com/aylur/ags) and [Astal](https://github.com/aylur/astal) as inputs.
 
-```nix
+```nix ins={6-15}
 # flake.nix
 {
   inputs = {
@@ -24,13 +24,23 @@ The flake.nix file containing your NixOS configuration must include [AGS](https:
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
+  outputs = { nixpkgs, ... } @ inputs: {
+    nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./configuration.nix
+      ];
+    };
+  };
 }
 ```
 
 ## 1. Scaffold a new project
 
 ```sh
-npx create-tadaima my-greeter --platform nixos
+pnpm dlx create-tadaima my-greeter --platform nixos
 cd my-greeter
 ```
 
@@ -38,10 +48,16 @@ This generates:
 
 ```
 my-greeter/
-  package.json
-  flake.nix
   .envrc
   .gitignore
+  .oxfmtrc.json
+  .oxlintrc.json
+  LICENSE
+  flake.nix
+  package.json
+  scripts/
+    build.sh
+    types.sh
   src/
     app.tsx
     global.css
@@ -56,6 +72,8 @@ my-greeter/
 direnv allow   # or: nix develop
 ```
 
+See [nix-direnv](https://github.com/nix-community/nix-direnv) for details on the direnv + Nix integration.
+
 ## 3. Set up dependencies and type definitions
 
 ```sh
@@ -68,31 +86,74 @@ This runs `pnpm install` and generates AGS type definitions (`tsconfig.json`, `@
 
 Edit `src/components/Greeter.tsx` to design your login screen. The generated template includes a minimal login form with Catppuccin Mocha styling.
 
-## 5. Build
+For a step-by-step guide on using the tadaima API, see [Usage](/guide/usage/).
+
+## 5. Build (optional)
+
+If you want to verify the build succeeds locally, you can run:
 
 ```sh
-nix build
+pnpm run build
 ```
 
-The greeter binary is at `./result/bin/greeter`.
+The greeter binary is at `./result/bin/greeter`. Note that you cannot run the greeter — this step only checks that the build completes without errors.
 
-## 6. Configure NixOS
+## 6. Push to a Git repository
 
-The generated `flake.nix` includes a NixOS module. Add your greeter to your system flake:
+The NixOS module consumes your greeter as a flake input, so it needs to be accessible via a Git URL.
 
-```nix
-# In your system flake inputs:
-inputs.my-greeter = {
-  url = "path:./path/to/my-greeter";  # or github:your-user/my-greeter
-  inputs.nixpkgs.follows = "nixpkgs";
-  inputs.ags.follows = "ags";
-  inputs.astal.follows = "astal";
-};
+```sh
+git init && git add -A && git commit -m "initial commit"
+git remote add origin git@github.com:your-user/my-greeter.git
+git push -u origin main
+```
+
+## 7. Configure NixOS
+
+The generated `flake.nix` includes a NixOS module. Add your greeter to your system flake.
+
+The `ags` and `astal` inputs should already be present from [Prerequisites](#prerequisites). Add your greeter as a new input (highlighted lines):
+
+```nix ins={17-23}
+# flake.nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal";
+    };
+
+    astal = {
+      url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    my-greeter = {
+      url = "github:your-user/my-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.ags.follows = "ags";
+      inputs.astal.follows = "astal";
+    };
+  };
+
+  outputs = { nixpkgs, ... } @ inputs: {
+    nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./configuration.nix
+      ];
+    };
+  };
+}
 ```
 
 Then import the module and enable it in your NixOS configuration:
 
-```nix
+```nix ins={6-9}
 # configuration.nix
 { inputs, ... }:
 {
@@ -110,7 +171,7 @@ The module automatically:
 - Enables and configures `services.greetd` with dbus-run-session + cage
 - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user
 
-## 7. Apply
+## 8. Apply
 
 ```sh
 sudo nixos-rebuild switch

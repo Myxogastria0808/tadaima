@@ -27,8 +27,17 @@ export default defineConfig({
         {
           label: 'Guide',
           items: [
-            { label: 'API Overview', slug: 'guide/api-overview' },
-            { label: 'Architecture', slug: 'guide/architecture' },
+            { label: 'Usage', slug: 'guide/usage' },
+            {
+              label: 'API Docs (@myxogastria0808/tadaima)',
+              link: 'https://myxogastria0808.github.io/tadaima/tadaima/',
+              attrs: { target: '_blank' },
+            },
+            {
+              label: 'API Docs (@myxogastria0808/create-tadaima)',
+              link: 'https://myxogastria0808.github.io/tadaima/create-tadaima/',
+              attrs: { target: '_blank' },
+            },
           ],
         },
         {
