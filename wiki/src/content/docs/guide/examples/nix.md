@@ -60,4 +60,3 @@ sudo systemctl enable greetd
 ```
 
 Reboot and you should see the example greeter on the login screen.
-

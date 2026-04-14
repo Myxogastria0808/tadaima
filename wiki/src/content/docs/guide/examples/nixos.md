@@ -102,4 +102,3 @@ sudo nixos-rebuild switch
 ```
 
 Reboot and you should see the example greeter on the login screen.
-

@@ -55,4 +55,3 @@ file paths when CSS is loaded via `load_from_string` (which is what
 See [GTK issue #5648](https://gitlab.gnome.org/GNOME/gtk/-/issues/5648).
 
 **Fix**: Use `Gtk.Picture` + `Gtk.Overlay` for background images.
-
