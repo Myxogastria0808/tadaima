@@ -19,15 +19,33 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Introduction', slug: 'getting-started/introduction' },
-            { label: 'Installation', slug: 'getting-started/installation' },
+            { label: 'NixOS', slug: 'getting-started/nixos' },
+            { label: 'Nix (non-NixOS)', slug: 'getting-started/nix' },
+            { label: 'Arch Linux', slug: 'getting-started/arch' },
           ],
         },
         {
           label: 'Guide',
           items: [
-            { label: 'API Overview', slug: 'guide/api-overview' },
-            { label: 'Examples', slug: 'guide/examples' },
-            { label: 'Architecture', slug: 'guide/architecture' },
+            { label: 'Usage', slug: 'guide/usage' },
+            {
+              label: 'API Docs (@myxogastria0808/tadaima)',
+              link: 'https://myxogastria0808.github.io/tadaima/tadaima/',
+              attrs: { target: '_blank' },
+            },
+            {
+              label: 'API Docs (@myxogastria0808/create-tadaima)',
+              link: 'https://myxogastria0808.github.io/tadaima/create-tadaima/',
+              attrs: { target: '_blank' },
+            },
+          ],
+        },
+        {
+          label: 'Examples',
+          items: [
+            { label: 'NixOS', slug: 'guide/examples/nixos' },
+            { label: 'Nix (non-NixOS)', slug: 'guide/examples/nix' },
+            { label: 'Arch Linux', slug: 'guide/examples/arch' },
           ],
         },
         {

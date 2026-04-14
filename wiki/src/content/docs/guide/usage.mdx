@@ -1,0 +1,361 @@
+---
+title: Usage
+description: Step-by-step guide to building a greeter with tadaima
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+This guide walks you through building a login greeter from scratch using the tadaima API.
+We follow the [simple example](https://github.com/Myxogastria0808/tadaima/tree/main/examples/simple) as a reference implementation.
+
+## Step 1: Set up the app entry point
+
+Every AGS greeter starts with `app.start()`. This initializes the GTK application, applies global CSS, and calls your main function.
+
+```tsx title="src/app.tsx"
+import app from 'ags/gtk4/app';
+import globalCss from './global.css';
+import Greeter from './components/Greeter';
+
+app.start({
+  css: globalCss,
+  instanceName: 'greeter',
+  requestHandler(_, response) {
+    response('not implemented');
+  },
+  main() {
+    Greeter();
+  },
+});
+```
+
+- `instanceName` — identifies this AGS instance. Use `'greeter'` so your CSS selectors can target `window#greeter`.
+- `css` — global CSS applied to the entire app. The simple example sets `window { background-color: transparent; }` here to let the greeter component handle its own background.
+- `main()` — called once the app is ready. This is where you create your greeter window.
+
+## Step 2: Initialize the greeter with `createGreeter`
+
+`createGreeter` is the main entry point of the tadaima library. It discovers available desktop sessions from `.desktop` files, loads cached login state, and provides a factory function for creating login handlers.
+
+```tsx title="src/components/Greeter.tsx"
+import { createGreeter } from '@myxogastria0808/tadaima';
+
+const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
+  sessionDirs: ['/usr/share/wayland-sessions', '/usr/share/xsessions'],
+  cachePath: '/var/cache/tadaima/state.json',
+});
+```
+
+| Option        | Type       | Description                                        |
+| ------------- | ---------- | -------------------------------------------------- |
+| `sessionDirs` | `string[]` | Directories to search for `.desktop` session files |
+| `cachePath`   | `string`   | Path to the JSON state cache file                  |
+
+Session directories differ by distro:
+
+| Distro     | Wayland                                          | X11                                       |
+| ---------- | ------------------------------------------------ | ----------------------------------------- |
+| NixOS      | `/run/current-system/sw/share/wayland-sessions/` | `/run/current-system/sw/share/xsessions/` |
+| Arch Linux | `/usr/share/wayland-sessions/`                   | `/usr/share/xsessions/`                   |
+
+### Return value
+
+| Property             | Type                                 | Description                                                |
+| -------------------- | ------------------------------------ | ---------------------------------------------------------- |
+| `sessions`           | `Session[]`                          | Available sessions parsed from `.desktop` files            |
+| `sessionNames`       | `string[]`                           | Session display names — convenience for `Gtk.DropDown`     |
+| `cache.username`     | `string`                             | Last authenticated username, or `""` if no cache exists    |
+| `cache.sessionIndex` | `number`                             | Index of last session in `sessions`, or `-1` if not found  |
+| `createLoginHandler` | `(callbacks) => () => Promise<void>` | Factory function to create a login handler (see next step) |
+
+`sessions` is an array of `Session` objects. Each session has a `name` (display name from the `.desktop` file) and an `exec` (command to launch the session). `sessionNames` is simply `sessions.map(s => s.name)` — provided as a convenience for `Gtk.DropDown.new_from_strings`.
+
+`cache` provides the last successful login state, so you can pre-fill the username field and pre-select the session dropdown.
+
+## Step 3: Declare widget references
+
+Before building the UI, declare references for the widgets you need to access later (reading input values, showing errors, disabling buttons, etc.). In GJS/AGS, you use `let` declarations with the definite assignment assertion (`!`), then assign them via the `$` prop in JSX.
+
+```tsx
+let usernameEntry!: Gtk.Entry;
+let passwordEntry!: Gtk.PasswordEntry;
+let sessionDropdown!: Gtk.DropDown;
+let errorLabel!: Gtk.Label;
+let loginButton!: Gtk.Button;
+```
+
+:::note
+The `$` prop is an AGS/Gnim feature — it is a callback that receives the widget instance after construction. This is how you capture references to GTK widgets in JSX:
+
+```tsx
+<Gtk.Entry $={(self) => (usernameEntry = self)} />
+```
+
+:::
+
+## Step 4: Create the login handler with `createLoginHandler`
+
+`createLoginHandler` returns an async function you can use directly as a GTK event handler. It handles the full login flow internally: greetd authentication, session validation, concurrency guard (prevents double-clicks), and state persistence.
+
+```tsx
+const handleLogin = createLoginHandler({
+  username: () => usernameEntry.text,
+  password: () => passwordEntry.text,
+  selectedSession: () => sessions[sessionDropdown.selected],
+  onLoggingIn: () => {
+    errorLabel.visible = false;
+    loginButton.sensitive = false;
+    loginButton.label = 'Logging in...';
+  },
+  onError: (message) => {
+    errorLabel.label = message;
+    errorLabel.visible = true;
+    passwordEntry.text = '';
+    passwordEntry.grab_focus();
+    loginButton.sensitive = true;
+    loginButton.label = 'Login';
+  },
+});
+```
+
+#### Value callbacks (called at login time)
+
+| Callback          | Type                         | Description                              |
+| ----------------- | ---------------------------- | ---------------------------------------- |
+| `username`        | `() => string`               | Returns the current username input value |
+| `password`        | `() => string`               | Returns the current password input value |
+| `selectedSession` | `() => Session \| undefined` | Returns the currently selected session   |
+
+These are **functions**, not static values. They are called when the user clicks "Login" to read the current widget values at that moment. This is necessary because widget refs are assigned after JSX evaluation via the `$` prop — the variables don't have values yet at the time `createLoginHandler` is called.
+
+#### Event callbacks
+
+| Callback      | Type                        | Required | When it's called                         |
+| ------------- | --------------------------- | -------- | ---------------------------------------- |
+| `onLoggingIn` | `() => void`                | No       | Login starts — disable UI, show spinner  |
+| `onSuccess`   | `() => void`                | No       | Login succeeded — state is already saved |
+| `onError`     | `(message: string) => void` | Yes      | Login failed — show error, re-enable UI  |
+
+:::tip
+`onSuccess` is optional because greetd typically terminates the greeter process on successful login.
+The cache is saved before `onSuccess` is called, so even if the process exits, the state is persisted.
+:::
+
+### What happens internally
+
+When the returned handler function is called, it:
+
+1. **Concurrency guard** — if a login is already in progress, returns immediately.
+2. **Session validation** — calls `selectedSession()` and reports an error if `undefined`.
+3. **`onLoggingIn`** — calls the callback so you can update the UI.
+4. **greetd authentication** — sends `create_session`, `post_auth_message_response`, and `start_session` to greetd via Unix socket IPC.
+5. **On success** — saves the username and session name to the cache file, then calls `onSuccess`.
+6. **On error** — calls `onError` with the error description from greetd.
+
+## Step 5: Build the GTK UI
+
+With the greeter initialized and the login handler ready, build the window using AGS/Gnim JSX.
+The greeter runs inside [cage](https://github.com/cage-kiosk/cage) (a Wayland kiosk compositor), so use `Gtk.ApplicationWindow` — not AGS's `<window>`, which requires `gtk4-layer-shell` (unsupported in cage).
+
+```tsx
+import app from 'ags/gtk4/app';
+import { Gtk } from 'ags/gtk4';
+
+const win = (
+  <Gtk.ApplicationWindow application={app} name="greeter">
+    <Gtk.Box
+      orientation={Gtk.Orientation.VERTICAL}
+      valign={Gtk.Align.CENTER}
+      halign={Gtk.Align.CENTER}
+      cssClasses={['login-box']}
+    >
+      <Gtk.Label label="Login" cssClasses={['greeting']} />
+      <Gtk.Entry
+        text={cache.username}
+        placeholderText="Username"
+        onActivate={() => passwordEntry.grab_focus()}
+        $={(self) => (usernameEntry = self)}
+      />
+      <Gtk.PasswordEntry
+        placeholderText="Password"
+        showPeekIcon={true}
+        onActivate={handleLogin}
+        $={(self) => (passwordEntry = self)}
+      />
+      <Gtk.DropDown
+        $constructor={() => Gtk.DropDown.new_from_strings(sessionNames)}
+        selected={cache.sessionIndex}
+        $={(self) => (sessionDropdown = self)}
+      />
+      <Gtk.Label label="" visible={false} cssClasses={['error']} $={(self) => (errorLabel = self)} />
+      <Gtk.Button label="Login" onClicked={handleLogin} $={(self) => (loginButton = self)} />
+    </Gtk.Box>
+  </Gtk.ApplicationWindow>
+) as Gtk.ApplicationWindow;
+
+win.present();
+passwordEntry.grab_focus();
+```
+
+Key points:
+
+- **`text={cache.username}`** — pre-fills the username from the cache.
+- **`selected={cache.sessionIndex}`** — pre-selects the last used session in the dropdown.
+- **`onActivate={handleLogin}`** — pressing Enter in the password field triggers login.
+- **`onClicked={handleLogin}`** — clicking the button triggers login.
+- **`$constructor`** — used for `Gtk.DropDown` because it requires a static factory method (`new_from_strings`) instead of property assignment.
+- **`passwordEntry.grab_focus()`** — focuses the password field on startup (username is often pre-filled from cache).
+
+## Step 6: Style the greeter
+
+Apply styles using SCSS. The `name="greeter"` prop on the window creates a `window#greeter` CSS selector.
+
+```scss title="src/components/style.scss"
+window#greeter {
+  background-color: #1e1e2e;
+
+  .login-box {
+    background-color: #1e1e2e;
+    border-radius: 16px;
+    padding: 32px;
+    min-width: 350px;
+  }
+
+  .greeting {
+    color: #89b4fa;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  entry {
+    background-color: #313244;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+
+  .error {
+    color: #f38ba8;
+    margin-top: 8px;
+  }
+
+  button {
+    background-color: #89b4fa;
+    color: #1e1e2e;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-top: 12px;
+    font-weight: bold;
+  }
+}
+```
+
+Apply the SCSS in your greeter component with `app.apply_css`:
+
+```tsx
+import app from 'ags/gtk4/app';
+import style from './style.scss';
+
+app.apply_css(style);
+```
+
+:::note
+GTK uses its own CSS subset — not standard web CSS. See the [GTK CSS overview](https://docs.gtk.org/gtk4/css-overview.html) for supported properties.
+:::
+
+## Complete code
+
+Here is the full greeter component combining all the steps above:
+
+```tsx title="src/components/Greeter.tsx"
+import app from 'ags/gtk4/app';
+import { Gtk } from 'ags/gtk4';
+import style from './style.scss';
+import { createGreeter } from '@myxogastria0808/tadaima';
+
+const Greeter = (): void => {
+  app.apply_css(style);
+
+  // Step 2: Initialize the greeter
+  const { sessions, sessionNames, cache, createLoginHandler } = createGreeter({
+    sessionDirs: ['/usr/share/wayland-sessions', '/usr/share/xsessions'],
+    cachePath: '/var/cache/tadaima/state.json',
+  });
+
+  // Step 3: Declare widget references
+  let usernameEntry!: Gtk.Entry;
+  let passwordEntry!: Gtk.PasswordEntry;
+  let sessionDropdown!: Gtk.DropDown;
+  let errorLabel!: Gtk.Label;
+  let loginButton!: Gtk.Button;
+
+  // Step 4: Create the login handler
+  const handleLogin = createLoginHandler({
+    username: () => usernameEntry.text,
+    password: () => passwordEntry.text,
+    selectedSession: () => sessions[sessionDropdown.selected],
+    onLoggingIn: () => {
+      errorLabel.visible = false;
+      loginButton.sensitive = false;
+      loginButton.label = 'Logging in...';
+    },
+    onError: (message) => {
+      errorLabel.label = message;
+      errorLabel.visible = true;
+      passwordEntry.text = '';
+      passwordEntry.grab_focus();
+      loginButton.sensitive = true;
+      loginButton.label = 'Login';
+    },
+  });
+
+  // Step 5: Build the GTK UI
+  const win = (
+    <Gtk.ApplicationWindow application={app} name="greeter">
+      <Gtk.Box
+        orientation={Gtk.Orientation.VERTICAL}
+        valign={Gtk.Align.CENTER}
+        halign={Gtk.Align.CENTER}
+        cssClasses={['login-box']}
+      >
+        <Gtk.Label label="Login" cssClasses={['greeting']} />
+        <Gtk.Entry
+          text={cache.username}
+          placeholderText="Username"
+          onActivate={() => passwordEntry.grab_focus()}
+          $={(self) => (usernameEntry = self)}
+        />
+        <Gtk.PasswordEntry
+          placeholderText="Password"
+          showPeekIcon={true}
+          onActivate={handleLogin}
+          $={(self) => (passwordEntry = self)}
+        />
+        <Gtk.DropDown
+          $constructor={() => Gtk.DropDown.new_from_strings(sessionNames)}
+          selected={cache.sessionIndex}
+          $={(self) => (sessionDropdown = self)}
+        />
+        <Gtk.Label label="" visible={false} cssClasses={['error']} $={(self) => (errorLabel = self)} />
+        <Gtk.Button label="Login" onClicked={handleLogin} $={(self) => (loginButton = self)} />
+      </Gtk.Box>
+    </Gtk.ApplicationWindow>
+  ) as Gtk.ApplicationWindow;
+
+  win.present();
+  passwordEntry.grab_focus();
+};
+
+export default Greeter;
+```
+
+## Type reference
+
+<LinkCard
+  title="@myxogastria0808/tadaima API Docs"
+  description="TypeDoc generated API documentation — full type definitions, function signatures, and more."
+  href="https://myxogastria0808.github.io/tadaima/tadaima/"
+  target="_blank"
+/>

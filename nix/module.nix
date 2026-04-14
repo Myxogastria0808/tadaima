@@ -44,8 +44,8 @@ in
     #
     # cage: minimal Wayland kiosk compositor. Used instead of Hyprland because
     # greeter uses Gtk.ApplicationWindow (not Astal.Window which requires
-    # wlr-layer-shell). cage automatically fullscreens the application.
-    # Flags: -s (exit when last client closes), -d (allow startup without GPU backend)
+    # wlr-layer-shell). cage runs the greeter as a single, maximized application.
+    # Flags: -s (permit VT switching), -d (don't draw client side decorations when possible)
     services.greetd = {
       enable = true;
       settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${cfg.package}/bin/greeter";
