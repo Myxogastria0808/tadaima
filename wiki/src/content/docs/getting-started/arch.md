@@ -1,6 +1,6 @@
 ---
 title: Arch Linux
-description: Getting started with tadaima on Arch-based distributions
+description: Getting started with @myxogastria0808/tadaima on Arch-based distributions
 ---
 
 ## Prerequisites
@@ -15,7 +15,7 @@ yay -S aylurs-gtk-shell
 ## 1. Scaffold a new project
 
 ```sh
-pnpm dlx create-tadaima my-greeter --platform arch
+pnpm dlx @myxogastria0808/create-tadaima my-greeter --platform arch
 cd my-greeter
 ```
 
@@ -51,7 +51,7 @@ This runs `pnpm install` (installs `@myxogastria0808/tadaima` from npm) and gene
 
 Edit `src/components/Greeter.tsx` to design your login screen. The generated template includes a minimal login form with Catppuccin Mocha styling.
 
-For a step-by-step guide on using the tadaima API, see [Usage](/guide/usage/).
+For a step-by-step guide on using the @myxogastria0808/tadaima API, see [Usage](/guide/usage/).
 
 ## 4. Build
 

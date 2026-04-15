@@ -1,6 +1,6 @@
 ---
 title: Nix (non-NixOS)
-description: Getting started with tadaima using Nix on non-NixOS distributions
+description: Getting started with @myxogastria0808/tadaima using Nix on non-NixOS distributions
 ---
 
 ## Prerequisites
@@ -12,7 +12,7 @@ description: Getting started with tadaima using Nix on non-NixOS distributions
 ## 1. Scaffold a new project
 
 ```sh
-pnpm dlx create-tadaima my-greeter --platform nix
+pnpm dlx @myxogastria0808/create-tadaima my-greeter --platform nix
 cd my-greeter
 ```
 
@@ -58,7 +58,7 @@ This runs `pnpm install` and generates AGS type definitions (`tsconfig.json`, `@
 
 Edit `src/components/Greeter.tsx` to design your login screen. The generated template includes a minimal login form with Catppuccin Mocha styling.
 
-For a step-by-step guide on using the tadaima API, see [Usage](/guide/usage/).
+For a step-by-step guide on using the @myxogastria0808/tadaima API, see [Usage](/guide/usage/).
 
 ## 5. Build
 

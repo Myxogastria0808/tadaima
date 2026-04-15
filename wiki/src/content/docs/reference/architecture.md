@@ -1,15 +1,15 @@
 ---
 title: Architecture
-description: How tadaima and greetd work together
+description: How @myxogastria0808/tadaima and greetd work together
 ---
 
 ## Overview
 
 ```
-┌─────────┐     ┌──────────────────┐     ┌─────────┐     ┌─────────────────────┐
-│ greetd  │────▶│ dbus-run-session │────▶│  cage   │────▶│ greeter (GJS+GTK4)  │
-│ (PAM)   │     └──────────────────┘     │ (kiosk) │     │ (your UI + tadaima) │
-└─────────┘                              └─────────┘     └─────────────────────┘
+┌─────────┐     ┌──────────────────┐     ┌─────────┐     ┌──────────────────────────────────────┐
+│ greetd  │────▶│ dbus-run-session │────▶│ cage    │────▶│ greeter (GJS+GTK4)                   │
+│ (PAM)   │     └──────────────────┘     │ (kiosk) │     │ (your UI + @myxogastria0808/tadaima) │
+└─────────┘                              └─────────┘     └──────────────────────────────────────┘
      ▲                                                               ▲
      │                                                               │
      │                   greetd-ipc(7) protocol                      │
@@ -39,7 +39,7 @@ cage does not support the `wlr-layer-shell` protocol, so AGS's `<window>`
 (which depends on `gtk4-layer-shell`) cannot be used. The greeter uses
 `Gtk.ApplicationWindow` instead.
 
-Flags used by tadaima:
+Flags used by @myxogastria0808/tadaima:
 
 - `-s` — permit VT switching
 - `-d` — don't draw client side decorations when possible
@@ -53,11 +53,11 @@ pattern.
 ## Authentication flow
 
 1. User enters username and password
-2. tadaima sends `create_session` to greetd via Unix socket
+2. @myxogastria0808/tadaima sends `create_session` to greetd via Unix socket
 3. greetd returns `auth_message` (or `success` / `error`)
-4. tadaima sends `post_auth_message_response` with the password
-5. On success: tadaima sends `start_session` with the selected session command
-6. On failure (`auth_error`): tadaima returns the error to the UI for display, user can retry
+4. @myxogastria0808/tadaima sends `post_auth_message_response` with the password
+5. On success: @myxogastria0808/tadaima sends `start_session` with the selected session command
+6. On failure (`auth_error`): @myxogastria0808/tadaima returns the error to the UI for display, user can retry
 
 ## greetd-ipc protocol
 

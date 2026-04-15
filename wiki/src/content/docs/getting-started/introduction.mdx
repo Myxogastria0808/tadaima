@@ -1,13 +1,13 @@
 ---
 title: Introduction
-description: What is tadaima and why use it
+description: What is @myxogastria0808/tadaima and why use it
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-## What is tadaima?
+## What is @myxogastria0808/tadaima?
 
-tadaima is a [greetd](https://sr.ht/~kennylevinsen/greetd/) greeter library for
+@myxogastria0808/tadaima is a [greetd](https://sr.ht/~kennylevinsen/greetd/) greeter library for
 [AGS](https://github.com/aylur/ags) / [GJS](https://gjs.guide/).
 
 It handles the hard parts of building a login screen:
@@ -18,16 +18,16 @@ It handles the hard parts of building a login screen:
 
 You bring the UI — use any GTK4 widget to design your login screen.
 
-## Why tadaima?
+## Why @myxogastria0808/tadaima?
 
-- **No Astal Greet dependency** — tadaima implements the greetd IPC protocol directly, removing the need for `gi://AstalGreet`
+- **No Astal Greet dependency** — @myxogastria0808/tadaima implements the greetd IPC protocol directly, removing the need for `gi://AstalGreet`
 - **TypeScript first** — full type safety with JSDoc documentation
 - **Framework agnostic** — works with AGS/Gnim JSX, but the library itself has no UI opinions
 - **Distro agnostic** — works on NixOS, Arch-based distributions, and any system with greetd and Nix.
 
 ## Architecture
 
-tadaima is built on top of [greetd](https://sr.ht/~kennylevinsen/greetd/), a minimal and flexible login manager daemon for Linux. greetd handles the low-level authentication (via PAM) and session lifecycle, while exposing a simple IPC protocol over a Unix socket. tadaima implements this [greetd-ipc(7)](https://man.archlinux.org/man/greetd-ipc.7.en) protocol — sending JSON requests and receiving responses — so your greeter can authenticate users and start sessions without dealing with the socket or protocol details directly.
+@myxogastria0808/tadaima is built on top of [greetd](https://sr.ht/~kennylevinsen/greetd/), a minimal and flexible login manager daemon for Linux. greetd handles the low-level authentication (via PAM) and session lifecycle, while exposing a simple IPC protocol over a Unix socket. @myxogastria0808/tadaima implements this [greetd-ipc(7)](https://man.archlinux.org/man/greetd-ipc.7.en) protocol — sending JSON requests and receiving responses — so your greeter can authenticate users and start sessions without dealing with the socket or protocol details directly.
 
 ## Getting Started
 

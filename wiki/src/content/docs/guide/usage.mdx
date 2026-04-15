@@ -1,11 +1,11 @@
 ---
 title: Usage
-description: Step-by-step guide to building a greeter with tadaima
+description: Step-by-step guide to building a greeter with @myxogastria0808/tadaima
 ---
 
 import { LinkCard } from '@astrojs/starlight/components';
 
-This guide walks you through building a login greeter from scratch using the tadaima API.
+This guide walks you through building a login greeter from scratch using the @myxogastria0808/tadaima API.
 We follow the [simple example](https://github.com/Myxogastria0808/tadaima/tree/main/examples/simple) as a reference implementation.
 
 ## Step 1: Set up the app entry point
@@ -35,7 +35,7 @@ app.start({
 
 ## Step 2: Initialize the greeter with `createGreeter`
 
-`createGreeter` is the main entry point of the tadaima library. It discovers available desktop sessions from `.desktop` files, loads cached login state, and provides a factory function for creating login handlers.
+`createGreeter` is the main entry point of the @myxogastria0808/tadaima library. It discovers available desktop sessions from `.desktop` files, loads cached login state, and provides a factory function for creating login handlers.
 
 ```tsx title="src/components/Greeter.tsx"
 import { createGreeter } from '@myxogastria0808/tadaima';

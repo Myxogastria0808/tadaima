@@ -3,7 +3,7 @@ title: Examples (Arch Linux)
 description: Using pre-built example greeters on Arch-based distributions
 ---
 
-tadaima includes four example greeters. On Arch-based distributions, you clone the repository and build them with AGS.
+@myxogastria0808/tadaima includes four example greeters. On Arch-based distributions, you clone the repository and build them with AGS.
 
 ## Available examples
 

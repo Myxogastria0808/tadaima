@@ -3,7 +3,7 @@ title: Examples (NixOS)
 description: Using pre-built example greeters on NixOS
 ---
 
-tadaima includes four example greeters. On NixOS, you can use them directly via the NixOS module without building anything yourself.
+@myxogastria0808/tadaima includes four example greeters. On NixOS, you can use them directly via the NixOS module without building anything yourself.
 
 ## Available examples
 
@@ -74,11 +74,11 @@ The flake.nix file containing your NixOS configuration must include [AGS](https:
 
 Replace `.movie` with `.minimal`, `.simple`, or `.image` to use a different example.
 
-- **`imports`** — Loads the tadaima NixOS module, which defines the `services.tadaima` options.
+- **`imports`** — Loads the @myxogastria0808/tadaima NixOS module, which defines the `services.tadaima` options.
 - **`services.tadaima.enable`** — When `true`, the module automatically:
   - Enables and configures `services.greetd` with the launch chain: `dbus-run-session` → `cage -s -d` → `greeter binary`.
-  - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user via `systemd.tmpfiles.rules`. tadaima uses this to persist the last selected user and session across reboots.
-- **`services.tadaima.package`** — The greeter binary package to launch. Here it points to one of tadaima's pre-built examples.
+  - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user via `systemd.tmpfiles.rules`. @myxogastria0808/tadaima uses this to persist the last selected user and session across reboots.
+- **`services.tadaima.package`** — The greeter binary package to launch. Here it points to one of @myxogastria0808/tadaima's pre-built examples.
 - **`services.tadaima.cachePath`** — (optional, default: `/var/cache/tadaima`) Override the cache directory location if needed.
 
 ### 3. Set a wallpaper (image / movie only)
