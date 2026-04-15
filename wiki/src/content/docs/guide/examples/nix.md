@@ -3,7 +3,7 @@ title: Examples (Nix)
 description: Using pre-built example greeters with Nix on non-NixOS
 ---
 
-tadaima includes four example greeters. On non-NixOS distributions with Nix, you build them directly from the remote flake with `nix build` and configure greetd manually.
+@myxogastria0808/tadaima includes four example greeters. On non-NixOS distributions with Nix, you build them directly from the remote flake with `nix build` and configure greetd manually.
 
 ## Available examples
 

@@ -6,7 +6,7 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   integrations: [
     starlight({
-      title: 'tadaima',
+      title: '@myxogastria0808/tadaima',
       social: [
         {
           icon: 'github',
