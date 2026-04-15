@@ -180,4 +180,3 @@ Authentication message types:
 | `secret`  | Indicates that input from the user should be considered secret when they answer this question. |
 | `info`    | Indicates that this message is informative, not a question.                                    |
 | `error`   | Indicates that this message is an error, not a question.                                       |
-
