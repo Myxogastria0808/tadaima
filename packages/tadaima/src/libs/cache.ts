@@ -69,3 +69,4 @@ export class CacheManager {
     GLib.file_set_contents(this.path, JSON.stringify({ user, session }));
   }
 }
+

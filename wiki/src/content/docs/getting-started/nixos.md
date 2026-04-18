@@ -168,7 +168,7 @@ Then import the module and enable it in your NixOS configuration:
 
 The module automatically:
 
-- Enables and configures `services.greetd` with dbus-run-session + cage
+- Enables and configures `services.greetd` with dbus-run-session + cage (`-s -d -mlast`)
 - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user
 
 ## 8. Apply

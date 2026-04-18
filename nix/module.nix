@@ -39,16 +39,18 @@ in
     # The greetd NixOS module automatically creates the `greeter` system user
     # and sets default VT to 1. Neither `user` nor `vt` need to be specified.
     #
-    # dbus-run-session: provides a D-Bus session bus required by GTK4 and
-    # tadaima's greetd IPC.
+    # dbus-run-session: provides a D-Bus session bus for AGS/Astal's D-Bus
+    # registration (Bus.own_name) and prevents GTK4's ~20s portal timeout.
+    # Note: tadaima's greetd IPC uses Unix sockets, not D-Bus.
     #
     # cage: minimal Wayland kiosk compositor. Used instead of Hyprland because
     # greeter uses Gtk.ApplicationWindow (not Astal.Window which requires
     # wlr-layer-shell). cage runs the greeter as a single, maximized application.
-    # Flags: -s (permit VT switching), -d (don't draw client side decorations when possible)
+    # Flags: -s (permit VT switching), -d (suppress CSD title bar),
+    #        -mlast (use only last connected monitor)
     services.greetd = {
       enable = true;
-      settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${cfg.package}/bin/greeter";
+      settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -mlast -- ${cfg.package}/bin/greeter";
     };
 
     # Cache directory owned by the greeter user for state persistence.

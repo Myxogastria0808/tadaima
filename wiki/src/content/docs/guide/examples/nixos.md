@@ -76,7 +76,7 @@ Replace `.movie` with `.minimal`, `.simple`, or `.image` to use a different exam
 
 - **`imports`** — Loads the @myxogastria0808/tadaima NixOS module, which defines the `services.tadaima` options.
 - **`services.tadaima.enable`** — When `true`, the module automatically:
-  - Enables and configures `services.greetd` with the launch chain: `dbus-run-session` → `cage -s -d` → `greeter binary`.
+  - Enables and configures `services.greetd` with the launch chain: `dbus-run-session` → `cage -s -d -mlast` → `greeter binary`.
   - Creates the cache directory (`/var/cache/tadaima`) owned by the `greeter` user via `systemd.tmpfiles.rules`. @myxogastria0808/tadaima uses this to persist the last selected user and session across reboots.
 - **`services.tadaima.package`** — The greeter binary package to launch. Here it points to one of @myxogastria0808/tadaima's pre-built examples.
 - **`services.tadaima.cachePath`** — (optional, default: `/var/cache/tadaima`) Override the cache directory location if needed.

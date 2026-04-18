@@ -42,7 +42,8 @@ cage does not support the `wlr-layer-shell` protocol, so AGS's `<window>`
 Flags used by @myxogastria0808/tadaima:
 
 - `-s` — permit VT switching
-- `-d` — don't draw client side decorations when possible
+- `-d` — suppress CSD title bar
+- `-mlast` — use only last connected monitor
 
 ### dbus-run-session
 

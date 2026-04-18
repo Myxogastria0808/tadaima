@@ -58,7 +58,7 @@
           config = lib.mkIf cfg.enable {
             services.greetd = {
               enable = true;
-              settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -- ${
+              settings.default_session.command = "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -d -mlast -- ${
                 self.packages.${system}.default
               }/bin/greeter";
             };

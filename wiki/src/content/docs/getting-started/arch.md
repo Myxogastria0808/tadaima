@@ -79,7 +79,7 @@ Edit `/etc/greetd/config.toml`:
 vt = 1
 
 [default_session]
-command = "dbus-run-session cage -s -d -- /usr/local/bin/my-greeter"
+command = "dbus-run-session cage -s -d -mlast -- /usr/local/bin/my-greeter"
 user = "greeter"
 ```
 

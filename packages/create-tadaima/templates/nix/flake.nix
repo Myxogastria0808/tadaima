@@ -91,7 +91,7 @@
       #   [terminal]
       #   vt = 1
       #   [default_session]
-      #   command = "dbus-run-session cage -s -d -- /nix/store/abc123...-{{projectName}}/bin/greeter"
+      #   command = "dbus-run-session cage -s -d -mlast -- /nix/store/abc123...-{{projectName}}/bin/greeter"
       #   user = "greeter"
       #
       # 5. Create cache directory and enable greetd:
