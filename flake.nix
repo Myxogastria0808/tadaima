@@ -164,7 +164,8 @@
             pkgs.gst_all_1.gst-plugins-bad
             pkgs.gst_all_1.gst-plugins-ugly
             pkgs.gst_all_1.gst-libav # FFmpeg-based codecs (H.264, H.265, etc.)
-            pkgs.gst_all_1.gst-vaapi # VA-API hardware-accelerated decoding
+            # VA-API hardware-accelerated decoding is provided by gst-plugins-bad
+            # (gst-vaapi was removed from nixpkgs in GStreamer 1.28)
           ];
 
           preBuild = ''
